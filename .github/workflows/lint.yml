@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+concurrency:
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
