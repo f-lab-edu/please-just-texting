@@ -1,0 +1,5 @@
+[flake8]
+ignore = F999,E501,E128,E124,E126,F841,E123,F401,F403
+max-line-length = 120
+exclude = env, .git
+
