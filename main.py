@@ -7,6 +7,7 @@ app = FastAPI()
 
 
 class Settings(BaseSettings):
+    conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
 
@@ -18,11 +19,16 @@ settings = Settings()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello": "World5"}
 
 
 def run_app() -> None:
-    uvicorn.run(app, host=settings.conf_host, port=settings.conf_port)
+    uvicorn.run(
+        "main:app",
+        host=settings.conf_host,
+        port=settings.conf_port,
+        reload=settings.conf_debug,
+    )
 
 
 def main() -> None:
