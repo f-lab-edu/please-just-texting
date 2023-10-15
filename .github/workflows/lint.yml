@@ -20,6 +20,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LINTER_RULES_PATH: .github/linters
+        PYTHON_ISORT_CONFIG_FILE: .isort.cfg
         DEFAULT_BRANCH: main
         VALIDATE_ALL_CODEBASE: false
         VALIDATE_PYTHON: true
