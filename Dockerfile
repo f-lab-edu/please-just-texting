@@ -8,6 +8,5 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 # A command for running FastAPI app.
-# TODO: The following will be replaced to the main.py as code.
 CMD ["python3", "main.py"]
 
