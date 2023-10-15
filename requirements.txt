@@ -3,4 +3,5 @@ uvicorn[standard]
 pydantic-settings
 black
 flake8
+isort
 
