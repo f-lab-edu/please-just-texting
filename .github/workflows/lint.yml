@@ -18,8 +18,8 @@ jobs:
     - name: Super-Linter
       uses: github/super-linter@v5
       env:
+        LINTER_RULES_PATH: /
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        LINTER_RULES_PATH: .github/linters
         DEFAULT_BRANCH: main
         VALIDATE_ALL_CODEBASE: false
         VALIDATE_PYTHON: true
