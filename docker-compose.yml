@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   web:
-    ...
-
-  db:
-    ...
+    build: ./
+    ports:
+      - "8000:8000"
+    deposends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql://user:password@db/mydatabase
