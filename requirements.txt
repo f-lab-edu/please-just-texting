@@ -4,4 +4,6 @@ pydantic-settings
 black
 flake8
 isort
+sqlalchemy
+alembic
 
