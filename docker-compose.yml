@@ -20,6 +20,18 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  alembic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: alembic revision --autogenerate -m 'Initial migration'
+    environment:
+      DATABASE_URL : "mysql+mysqldb://user:password@db/your_database"
+    volumes:
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+      - ./models.py:/app/models.py
+
 volumes:
   db_data:
 
