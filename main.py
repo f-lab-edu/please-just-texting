@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
@@ -32,15 +33,6 @@ def read_root():
     return {"Hello": "World5"}
 
 
-# CRUD
-@app.get("/users/{user_id}")
-def read_user(user_id: int):
-    user = get_user(user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
 def run_app() -> None:
     uvicorn.run(
         "main:app",
@@ -56,6 +48,15 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# CRUD
+@app.get("/users/{user_id}")
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    user = get_user(db, user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 def main() -> None:
