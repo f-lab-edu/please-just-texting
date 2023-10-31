@@ -24,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: alembic revision --autogenerate -m 'Initial migration'
+    command: /bin/sh -c "alembic revision --autogenerate -m 'Migration' && alembic upgrade head"
     environment:
       DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
