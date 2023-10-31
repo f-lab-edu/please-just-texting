@@ -1,8 +1,10 @@
 import os
 
+import crud
 import uvicorn
 from fastapi import Depends
 from fastapi import FastAPI
+from fastapi import HTTPException
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
@@ -28,6 +30,15 @@ settings = Settings()
 @app.get("/")
 def read_root():
     return {"Hello": "World5"}
+
+
+# CRUD
+@app.get("/users/{user_id}")
+def read_user(user_id: int):
+    user = crud.get_user(user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 def run_app() -> None:
