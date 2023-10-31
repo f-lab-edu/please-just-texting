@@ -26,7 +26,7 @@ services:
       dockerfile: Dockerfile
     command: alembic revision --autogenerate -m 'Initial migration'
     environment:
-      DATABASE_URL : "mysql+mysqldb://user:password@db/your_database"
+      DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
       - ./alembic:/app/alembic
       - ./alembic.ini:/app/alembic.ini
