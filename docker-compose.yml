@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=mysql://user:password@db/mydatabase
+      - DATABASE_URL=mysql+mysqldb://user:password@db/mydatabase
 
   db:
     image: mysql:8.0
@@ -31,6 +31,8 @@ services:
       - ./alembic:/app/alembic
       - ./alembic.ini:/app/alembic.ini
       - ./models.py:/app/models.py
+    depends_on:
+      - db
 
 volumes:
   db_data:
