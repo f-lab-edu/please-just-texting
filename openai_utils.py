@@ -1,21 +1,18 @@
 import os
 
 import openai
+from dotenv import load_dotenv
 
+# load .env file
+load_dotenv()
+
+# API key setting
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-completion = openai.ChatCompletion.create(
+response = openai.Completion.create(
     model="gpt-3.5-turbo",
-    messages=[
-        {
-            "role": "system",
-            "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair.",
-        },
-        {
-            "role": "user",
-            "content": "Compose a poem that explains the concept of recursion in programming.",
-        },
-    ],
+    prompt="Translate the following English text to Korean: 'Hello, how are you?'",
+    max_tokens=150,
 )
 
-print(completion.choices[0].message)
+print(response.choices[0].text.strip())
