@@ -1,10 +1,10 @@
-from pydantic import BaseSettings
 from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
-    conversations: str = Field(..., env="CONVERSATION")
+    conversation: str = Field(..., env="CONVERSATION")
 
     class Config:
         env_file = ".env"
