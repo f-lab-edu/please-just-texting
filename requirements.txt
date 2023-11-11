@@ -1,5 +1,5 @@
-fastapi==0.103.2
-uvicorn[standard]
+fastapi
+uvicorn
 pydantic-settings
 black
 flake8
@@ -8,8 +8,8 @@ sqlalchemy
 alembic
 mysqlclient
 openai
-python-dotenv==0.19.2
-google-api-python-client==2.33.0
+python-dotenv
+google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
 datetime
