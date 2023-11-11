@@ -5,6 +5,8 @@ from crud import get_user
 from fastapi import Depends
 from fastapi import FastAPI
 from fastapi import HTTPException
+from fastapi.templating import Jinja2Templates
+from fatsapi.response import HTMLResponse
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
