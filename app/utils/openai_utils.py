@@ -1,5 +1,6 @@
 from openai import OpenAI
-from settings import settings
+
+from ..settings import settings
 
 client = OpenAI(
     api_key=settings.openai_api_key,
