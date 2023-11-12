@@ -13,6 +13,7 @@ from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
+from utils import openai_utils
 
 # from crud import get_user
 
@@ -45,7 +46,12 @@ async def read_form(request: Request):
 
 @app.post("/submit")
 async def submit_dialogue(username: str = Form(...), message: str = Form(...)):
-    return {"username": username, "message": message}
+    schedule_response = openai_utils.getResponseFromOpenai(message)
+    return {
+        "username": username,
+        "message": message,
+        "schedule_response": schedule_response,
+    }
 
 
 def run_app() -> None:
