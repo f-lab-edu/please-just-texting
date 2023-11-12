@@ -17,7 +17,7 @@ def get_calendar_service():
         with open("token.pickle", "rb") as token:
             creds = pickle.load(token)
 
-    # 자격증명이 유효하지 않거나 존재하지 않으면 새로 생성
+    # Create new credentials if they are invalid or do not exist
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -25,7 +25,7 @@ def get_calendar_service():
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
 
-        # 새로운 자격증명을 token.pickle 파일에 저장
+        # Save the new credentials to the token.pickle file
         with open("token.pickle", "wb") as token:
             pickle.dump(creds, token)
 
