@@ -44,14 +44,15 @@ async def read_form(request: Request):
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
-@app.post("/submit")
-async def submit_dialogue(username: str = Form(...), message: str = Form(...)):
+@app.post("/submit", response_class=HTMLResponse)
+async def submit_dialogue(
+    request: Request, username: str = Form(...), message: str = Form(...)
+):
     schedule_response = openai_utils.getResponseFromOpenai(message)
-    return {
-        "username": username,
-        "message": message,
-        "schedule_response": schedule_response,
-    }
+    return templates.TemplateResponse(
+        "show_response.html",
+        {"request": request, "schedule_response": schedule_response},
+    )
 
 
 def run_app() -> None:

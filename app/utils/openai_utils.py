@@ -5,11 +5,8 @@ client = OpenAI(
     api_key=settings.openai_api_key,
 )
 
-# temporary conversation
-conversation = settings.conversation
 
-
-def getResponseFromOpenai(message, model="gpt-3.5-turbo"):
+def getResponseFromOpenai(message):
     messages = [
         {
             "role": "system",
@@ -22,14 +19,9 @@ def getResponseFromOpenai(message, model="gpt-3.5-turbo"):
             "role": "assistant",
             "content": "user가 제시한 대화내역에서 일정과 관련된 내용을 'YYYY-MM-DD' 그리고 일자 제목, 마지막으로 일자 아젠다를 각각 뽑는다.\
     정보를 추출했으면 date: {일정날짜 / STRING}, title: {일정 제목 / STRING}, description: {일정 아젠다 / STRING} 형태로 키를 잡아서 제공해줘.\
-    키는 반드시 소문자 알파벳이야.",
+    키는 반드시 소문자 알파벳이야. 일정 아젠다는 20자를 넘어가면 안돼",
         },
     ]
 
-    response = client.chat.completions.create(model, messages=messages)
-    return response
-
-
-# response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
-
-# print(response.choices[0].message.content.strip())
+    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
+    return response.choices[0].message.content.strip()
