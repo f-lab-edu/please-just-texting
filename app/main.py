@@ -22,7 +22,7 @@ app = FastAPI()
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # template
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 class Settings(BaseSettings):
@@ -38,14 +38,14 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-@app.get("/dialogue-form", response_class=HTMLResponse)
-async def get_dialogue_form(request: Request):
+@app.get("/", response_class=HTMLResponse)
+async def read_form(request: Request):
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
-@app.post("/submit-dialogue")
-async def submit_dialogue(dialogue: str = Form(...)):
-    return {"dialogue": dialogue}
+@app.post("/submit")
+async def submit_dialogue(username: str = Form(...), message: str = Form(...)):
+    return {"username": username, "message": message}
 
 
 def run_app() -> None:
