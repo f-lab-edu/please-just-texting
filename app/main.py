@@ -13,11 +13,14 @@ from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
+from utils import calender_utils
 from utils import openai_utils
 
 # from crud import get_user
 
 app = FastAPI()
+
+
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 # engine = create_engine(DATABASE_URL)
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -49,9 +52,18 @@ async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ):
     schedule_response = openai_utils.getResponseFromOpenai(message)
+    date = schedule_response[0]
+    title = schedule_response[1]
+    description = schedule_response[2]
     return templates.TemplateResponse(
         "show_response.html",
-        {"request": request, "schedule_response": schedule_response},
+        {
+            "request": request,
+            "schedule_response": schedule_response,
+            "data": date,
+            "title": title,
+            "description": description,
+        },
     )
 
 
