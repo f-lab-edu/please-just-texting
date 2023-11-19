@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=mysql://user:password@db/mydatabase
+      - DATABASE_URL=mysql+mysqldb://user:password@db/mydatabase
 
   db:
     image: mysql:8.0
@@ -19,7 +19,20 @@ services:
       - MYSQL_PASSWORD=password
     volumes:
       - db_data:/var/lib/mysql
-  
+
+  alembic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /bin/sh -c "alembic revision --autogenerate -m 'Migration' && alembic upgrade head"
+    environment:
+      DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
+    volumes:
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+      - ./models.py:/app/models.py
+    depends_on:
+      - db
+
 volumes:
   db_data:
-
