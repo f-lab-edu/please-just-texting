@@ -12,8 +12,12 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 logger = logging.getLogger()
 
+<<<<<<< HEAD
 
 def get_calendar_service() -> Request:
+=======
+def get_calendar_service() -> Resource:
+>>>>>>> 0bed13b (feat: add type hint in calendar_utils.py)
     creds = None
     # lode token file
     if os.path.exists("token.pickle"):
