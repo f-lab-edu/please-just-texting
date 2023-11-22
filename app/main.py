@@ -30,7 +30,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings) -> None:
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
@@ -44,14 +44,14 @@ settings = Settings()
 
 
 @app.get("/", response_class=HTMLResponse)
-async def read_form(request: Request):
+async def read_form(request: Request) -> TemplateResponse:
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
 @app.post("/submit", response_class=HTMLResponse)
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
-):
+): -> None
     schedule_response = openai_utils.getResponseFromOpenai(message)
     date = schedule_response[0]
     title = schedule_response[1]
