@@ -6,7 +6,7 @@ client = OpenAI(
 )
 
 
-def getResponseFromOpenai(message):
+def getResponseFromOpenai(message: str) -> dict:
     messages = [
         {
             "role": "system",
