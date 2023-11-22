@@ -16,11 +16,12 @@ from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
 
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # from crud import get_user
 
 app = FastAPI()
 
-
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 # engine = create_engine(DATABASE_URL)
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -74,7 +75,6 @@ def run_app() -> None:
         port=settings.conf_port,
         reload=settings.conf_debug,
     )
-
 
 # TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # def get_db():
