@@ -33,7 +33,7 @@ def get_calendar_service() -> Resource:
     return service
 
 
-def add_event_to_calendar(date: date, title: str, description: str):
+def add_event_to_calendar(date: date, title: str, description: str) -> None:
     service = get_calendar_service()
 
     event = {
