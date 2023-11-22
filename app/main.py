@@ -30,7 +30,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 
-class Settings(BaseSettings) -> None:
+class Settings(BaseSettings):
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
