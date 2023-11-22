@@ -2,7 +2,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
-class Settings(BaseSettings):
+class Settings(BaseSetting: BaseSettings) -> None:
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
     conversation: str = Field(..., env="CONVERSATION")
 
