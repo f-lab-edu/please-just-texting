@@ -51,6 +51,3 @@ def add_event_to_calendar(date, title, description):
 
     event = service.events().insert(calendarId="primary", body=event).execute()
     print(f"Event created: {event.get('htmlLink')}")
-
-
-# add_event_to_calendar("2023-11-07", "temp", "aaaaaaaaa")
