@@ -49,9 +49,7 @@ async def read_form(request: Request) -> TemplateResponse:
 
 
 @app.post("/submit", response_class=HTMLResponse)
-async def submit_dialogue(
-    request: Request, username: str = Form(...), message: str = Form(...)
-): -> None
+async def submit_dialogue(request: Request, username: str = Form(...), message: str = Form(...)) -> None:
     schedule_response = openai_utils.getResponseFromOpenai(message)
     date = schedule_response[0]
     title = schedule_response[1]
