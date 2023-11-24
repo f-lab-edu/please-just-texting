@@ -12,7 +12,6 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 logger = logging.getLogger()
 
-
 def get_calendar_service() -> Request:
     creds = None
     # lode token file
@@ -36,7 +35,7 @@ def get_calendar_service() -> Request:
     return service
 
 
-def add_event_to_calendar(date, title: str, description: str) -> None:
+def add_event_to_calendar(date: datetime.date, title: str, description: str) -> None:
     service = get_calendar_service()
 
     event = {
