@@ -49,7 +49,9 @@ async def read_form(request: Request):
 
 
 @app.post("/submit", response_class=HTMLResponse)
-async def submit_dialogue(request: Request, username: str = Form(...), message: str = Form(...)) -> None:
+async def submit_dialogue(
+    request: Request, username: str = Form(...), message: str = Form(...)
+) -> None:
     schedule_response = openai_utils.getResponseFromOpenai(message)
     date = schedule_response[0]
     title = schedule_response[1]
@@ -73,6 +75,7 @@ def run_app() -> None:
         port=settings.conf_port,
         reload=settings.conf_debug,
     )
+
 
 # TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # def get_db():
