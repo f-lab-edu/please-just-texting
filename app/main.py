@@ -76,6 +76,7 @@ def run_app() -> None:
         reload=settings.conf_debug,
     )
 
+
 # TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # def get_db():
 #     db = SessionLocal()
