@@ -44,7 +44,7 @@ settings = Settings()
 
 
 @app.get("/", response_class=HTMLResponse)
-async def read_form(request: Request) -> TemplateResponse:
+async def read_form(request: Request):
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
