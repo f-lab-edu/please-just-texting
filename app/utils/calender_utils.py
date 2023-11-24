@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 
-def get_calendar_service() -> Resource:
+def get_calendar_service():
     creds = None
     # lode token file
     if os.path.exists("token.pickle"):
@@ -33,7 +33,7 @@ def get_calendar_service() -> Resource:
     return service
 
 
-def add_event_to_calendar(date: date, title: str, description: str) -> None:
+def add_event_to_calendar(date, title: str, description: str) -> None:
     service = get_calendar_service()
 
     event = {
