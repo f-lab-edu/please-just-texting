@@ -77,7 +77,7 @@ def run_app() -> None:
     )
 
 
-# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
+# TODO: Uncomment database code after testing calendar and OpenAI functionality.
 # def get_db():
 #     db = SessionLocal()
 #     try:
