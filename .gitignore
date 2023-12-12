@@ -3,6 +3,7 @@
 
 # desktop client info
 credentials.json
+token.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
