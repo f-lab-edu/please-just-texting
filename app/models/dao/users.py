@@ -1,6 +1,3 @@
-from typing import List
-from typing import Optional
-
 from model import User
 from sqlalchemy.orm import Session
 from Typing import Optional
@@ -21,7 +18,7 @@ def create_user(db: Session, user: User) -> User:
     return user
 
 
-def update_user(db: Session, user_id: int, user: User) -> Optional[User]:
+def update_user(db: Session, user_id: int, user: User) -> User:
     db_user = db.query(User).filter(User.id == user_id).first()
     for key, value in user.dict().items():
         setattr(db_user, key, value)
