@@ -1,4 +1,3 @@
-from typing import List
 from typing import Optional
 
 from model import User
@@ -9,11 +8,11 @@ def get_user(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100) -> List[User]:
+def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
 
-def create_user(db: Session, user: User) -> Optional[User]:
+def create_user(db: Session, user: User) -> User:
     db.add(user)
     db.commit()
     db.refresh(user)
