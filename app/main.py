@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
-settings: BaseSettings = Settings()
+settings = Settings()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -76,6 +76,7 @@ def run_app() -> None:
     )
 
 
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # def get_db():
 #     db = SessionLocal()
 #     try:
@@ -83,7 +84,7 @@ def run_app() -> None:
 #     finally:
 #         db.close()
 
-
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # # CRUD
 # @app.get("/users/{user_id}")
 # def read_user(user_id: int, db: Session = Depends(get_db)):
