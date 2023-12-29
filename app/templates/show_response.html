@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Response</title>
+    <title>{{ data.title }}</title>
 </head>
 <body>
-    <h1>Response from OpenAI</h1>
-    <p>{{ schedule_response }}</p>
-    <p>{{ date }}</p>
-    <p>{{ title }}</p>
-    <p>{{ description }}</p>
+    <p>Title: {{ data.title }}</p>
+    <p>Date: {{ data.date }}</p>
+    <p>Description: {{ data.description }}</p>
 </body>
 </html>
