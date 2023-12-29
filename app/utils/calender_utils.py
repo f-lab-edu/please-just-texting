@@ -36,8 +36,12 @@ def get_calendar_service() -> Request:
     return service
 
 
-def add_event_to_calendar(date: datetime.date, title: str, description: str) -> None:
+def add_event_to_calendar(parsed_response: dict) -> None:
     service = get_calendar_service()
+
+    title = parsed_response["title"]
+    date = parsed_response["date"]
+    description = parsed_response["description"]
 
     event = {
         "summary": title,
