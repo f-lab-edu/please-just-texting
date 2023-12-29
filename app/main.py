@@ -16,12 +16,11 @@ from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
 
-# TODO: Uncomment database code after testing calendar and OpenAI functionality.
 # from crud import get_user
 
 app = FastAPI()
 
-# TODO: Uncomment database code after testing calendar and OpenAI functionality.
+
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 # engine = create_engine(DATABASE_URL)
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -51,7 +50,7 @@ async def read_form(request: Request):
 @app.post("/submit", response_class=HTMLResponse)
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
-):
+) -> None:
     schedule_response = openai_utils.getResponseFromOpenai(message)
     date = schedule_response[0]
     title = schedule_response[1]
@@ -77,7 +76,7 @@ def run_app() -> None:
     )
 
 
-# TODO: Uncomment database code after testing calendar and OpenAI functionality.
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # def get_db():
 #     db = SessionLocal()
 #     try:
@@ -85,7 +84,7 @@ def run_app() -> None:
 #     finally:
 #         db.close()
 
-# TODO: Uncomment database code after testing calendar and OpenAI functionality.
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # # CRUD
 # @app.get("/users/{user_id}")
 # def read_user(user_id: int, db: Session = Depends(get_db)):

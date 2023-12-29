@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import pickle
 
@@ -9,8 +10,10 @@ from googleapiclient.discovery import build
 # 캘린더 API 접근 권한 설정
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+logger = logging.getLogger()
 
-def get_calendar_service():
+
+def get_calendar_service() -> Request:
     creds = None
     # lode token file
     if os.path.exists("token.pickle"):
@@ -33,7 +36,7 @@ def get_calendar_service():
     return service
 
 
-def add_event_to_calendar(date, title, description):
+def add_event_to_calendar(date: datetime.date, title: str, description: str) -> None:
     service = get_calendar_service()
 
     event = {
@@ -50,4 +53,7 @@ def add_event_to_calendar(date, title, description):
     }
 
     event = service.events().insert(calendarId="primary", body=event).execute()
-    print(f"Event created: {event.get('htmlLink')}")
+    logger.debug(f"Event created: {event.get('htmlLink')}")
+
+
+# add_event_to_calendar("2023-11-07", "temp", "aaaaaaaaa")
