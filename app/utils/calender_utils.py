@@ -58,6 +58,3 @@ def add_event_to_calendar(parsed_response: dict) -> None:
 
     event = service.events().insert(calendarId="primary", body=event).execute()
     logger.debug(f"Event created: {event.get('htmlLink')}")
-
-
-# add_event_to_calendar("2023-11-07", "temp", "aaaaaaaaa")
