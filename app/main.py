@@ -54,10 +54,15 @@ async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ) -> None:
     schedule_response = openai_utils.getResponseFromOpenai(message)
-    parsed_date = json.loads(schedule_response)
+    parsed_response = json.loads(schedule_response)
+
+    print("calendar entry")
+    calender_utils.add_event_to_calendar(parsed_response)
+    print("calendar done")
+
     return templates.TemplateResponse(
         "show_response.html",
-        {"request": request, "data": parsed_date},
+        {"request": request, "data": parsed_response},
     )
 
 
