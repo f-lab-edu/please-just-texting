@@ -1,3 +1,4 @@
+import json
 import os
 
 import uvicorn
@@ -52,18 +53,10 @@ async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ) -> None:
     schedule_response = openai_utils.getResponseFromOpenai(message)
-    date = schedule_response[0]
-    title = schedule_response[1]
-    description = schedule_response[2]
+    parsed_date = json.loads(schedule_response)
     return templates.TemplateResponse(
         "show_response.html",
-        {
-            "request": request,
-            "schedule_response": schedule_response,
-            "data": date,
-            "title": title,
-            "description": description,
-        },
+        {"request": request, "data": parsed_date},
     )
 
 
