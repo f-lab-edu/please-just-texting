@@ -15,9 +15,10 @@ logger = logging.getLogger()
 
 def get_calendar_service() -> Request:
     creds = None
+    token_path = "../token.pickle"
     # lode token file
-    if os.path.exists("token.pickle"):
-        with open("token.pickle", "rb") as token:
+    if os.path.exists(token_path):
+        with open(token_path, "rb") as token:
             creds = pickle.load(token)
 
     # Create new credentials if they are invalid or do not exist
@@ -57,4 +58,5 @@ def add_event_to_calendar(parsed_response: dict) -> None:
     }
 
     event = service.events().insert(calendarId="primary", body=event).execute()
+
     logger.debug(f"Event created: {event.get('htmlLink')}")
