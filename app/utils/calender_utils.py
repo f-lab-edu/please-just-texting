@@ -12,6 +12,7 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 logger = logging.getLogger()
 
+
 def get_calendar_service() -> Request:
     creds = None
     token_path = "../token.pickle"
