@@ -1,3 +1,4 @@
+# type: ignore
 from openai import OpenAI
 from settings import settings
 
