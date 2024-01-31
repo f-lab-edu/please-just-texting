@@ -1,6 +1,7 @@
-from model import User
+from typing import Optional
+
+from models import User
 from sqlalchemy.orm import Session
-from Typing import Optional
 
 
 def get_user(db: Session, user_id: int) -> Optional[User]:
