@@ -1,14 +1,22 @@
-from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import Sequence
 from sqlalchemy import String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Declarative_Base
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
-Base = declarative_base()
+
+class Base(Declarative_Base):
+    pass
 
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
-    name = Column(String(50))
-    age = Column(Integer)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(30))
+    password_hash: Mapped[str] = mapped_column(String(100))
+    email: Mapped[str] = mapped_column(String(100), unique=True, nallable=False)
+
+    def __repr__(self) -> str:
+        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
