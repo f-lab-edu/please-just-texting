@@ -12,7 +12,6 @@ from fastapi.templating import Jinja2Templates
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
@@ -22,10 +21,12 @@ from utils import openai_utils
 
 app = FastAPI()
 
-# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
-# DATABASE_URL = os.environ.get("DATABASE_URL")
-# engine = create_engine(DATABASE_URL)
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# database engine
+DATABASE_URL = os.environ.get("DATABASE_URL")
+engine = create_engine(DATABASE_URL, echo=True)
+
+# session
+session = sessionmaker(bind=engine)
 
 # template
 templates = Jinja2Templates(directory="app/templates")
@@ -35,8 +36,8 @@ class Settings(BaseSettings):
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
-    openai_api_key: str = None
-    conversation: str = None
+    openai_api_key: str
+    conversation: str
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -73,13 +74,14 @@ def run_app() -> None:
     )
 
 
-# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
-# def get_db():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
+# database connection
+def get_db():
+    db = session()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # # CRUD
