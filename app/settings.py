@@ -8,9 +8,8 @@ class Settings(BaseSettings):
     conf_port: int = 8000
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
 
-    database_url: str
-    database_name: str
-    database_password: str
+    user_name: str = Field(..., min_length=1)
+    user_password: str = Field(..., min_length=1)
 
     class Config:
         env_file = ".env"
