@@ -12,6 +12,11 @@ services:
 
   db:
     image: mysql:latest
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MYSQL_DATABASE=mydatabase
