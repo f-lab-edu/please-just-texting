@@ -31,13 +31,14 @@ services:
       dockerfile: Dockerfile
     command: /bin/sh -c "alembic revision --autogenerate -m 'Migration' && alembic upgrade head"
     environment:
-      DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
+      DATABASE_URL: "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
       - ./alembic:/src/alembic
-      - ./alembic.ini:/src/alembic.ini
       - ./app/models.py:/src/app/models.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
 
 volumes:
   db_data:
