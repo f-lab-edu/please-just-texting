@@ -1,5 +1,4 @@
 import json
-import os
 
 import uvicorn
 from fastapi import Depends
@@ -23,7 +22,7 @@ from utils import openai_utils
 app = FastAPI()
 
 # database engine
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = "mysql+mysqldb://user:password@db/mydatbase"
 engine = create_engine(DATABASE_URL, echo=True)
 
 # session
