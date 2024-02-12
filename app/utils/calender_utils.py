@@ -15,7 +15,7 @@ logger = logging.getLogger()
 
 def get_calendar_service() -> Request:
     creds = None
-    token_path = "../token.pickle"
+    token_path = "token.pickle"
     # lode token file
     if os.path.exists(token_path):
         with open(token_path, "rb") as token:
