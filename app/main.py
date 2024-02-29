@@ -1,6 +1,7 @@
 import json
 import os
 
+import schemas
 import uvicorn
 from fastapi import Depends
 from fastapi import FastAPI
@@ -12,8 +13,6 @@ from fastapi.templating import Jinja2Templates
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from settings import settings
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
 
@@ -21,13 +20,6 @@ from utils import openai_utils
 # from crud import get_user
 
 app = FastAPI()
-
-# database engine
-DATABASE_URL = os.environ.get("DATABASE_URL")
-engine = create_engine(DATABASE_URL, echo=True)
-
-# session
-session = sessionmaker(bind=engine)
 
 # template
 templates = Jinja2Templates(directory="app/templates")
@@ -60,15 +52,6 @@ def run_app() -> None:
         port=settings.conf_port,
         reload=settings.conf_debug,
     )
-
-
-# database connection
-def get_db():
-    db = session()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
