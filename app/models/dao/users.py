@@ -1,15 +1,19 @@
 from typing import Optional
 
+from fastapi import HTTPException
 from models import User
-from sqlalchemy.orm import Session
-from schemas import UserCreate
 from passlib.context import CryptContext
+from schemas import UserCreate
+from sqlalchemy.orm import Session
 
-pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def get_user(db: Session, user_id: int) -> Optional[User]:
-    return db.query(User).filter(User.id == user_id).first()
+def get_user(db: Session, user_id: int) -> User:
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if db_user in None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
