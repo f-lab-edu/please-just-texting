@@ -16,3 +16,4 @@ datetime
 jinja2
 python-multipart
 mypy
+passlib
