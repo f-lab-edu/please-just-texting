@@ -17,3 +17,4 @@ jinja2
 python-multipart
 mypy
 passlib
+email-validator
