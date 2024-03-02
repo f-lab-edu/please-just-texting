@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi import HTTPException
-from models import User
+from models.base import User
 from passlib.context import CryptContext
 from schemas import UpdateUser
 from schemas import UserCreate
