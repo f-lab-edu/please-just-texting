@@ -30,7 +30,7 @@ services:
     volumes:
       - ./alembic:/src/app/alembic
       - ./alembic.ini:/src/app/alembic.ini
-      - ./app/models/base_model.py:/src/app/models/base_model.py
+      - ./app/models/base.py:/src/app/models/base.py
     depends_on:
       - db
 
