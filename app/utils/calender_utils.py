@@ -6,6 +6,7 @@ import pickle
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from settings import PROJECT_ROOT
 
 # 캘린더 API 접근 권한 설정
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
@@ -15,9 +16,10 @@ logger = logging.getLogger()
 
 def get_calendar_service() -> Request:
     creds = None
+    token_path = PROJECT_ROOT / "token.pickle"
     # lode token file
-    if os.path.exists("token.pickle"):
-        with open("token.pickle", "rb") as token:
+    if os.path.exists(token_path):
+        with open(token_path, "rb") as token:
             creds = pickle.load(token)
 
     # Create new credentials if they are invalid or do not exist
@@ -36,8 +38,12 @@ def get_calendar_service() -> Request:
     return service
 
 
-def add_event_to_calendar(date: datetime.date, title: str, description: str) -> None:
+def add_event_to_calendar(parsed_response: dict[str, str]) -> None:
     service = get_calendar_service()
+
+    title = parsed_response["title"]
+    date = parsed_response["date"]
+    description = parsed_response["description"]
 
     event = {
         "summary": title,
@@ -53,7 +59,5 @@ def add_event_to_calendar(date: datetime.date, title: str, description: str) -> 
     }
 
     event = service.events().insert(calendarId="primary", body=event).execute()
+
     logger.debug(f"Event created: {event.get('htmlLink')}")
-
-
-# add_event_to_calendar("2023-11-07", "temp", "aaaaaaaaa")

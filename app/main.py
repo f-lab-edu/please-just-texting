@@ -17,11 +17,12 @@ from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
 
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # from crud import get_user
 
 app = FastAPI()
 
-
+# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 # engine = create_engine(DATABASE_URL)
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -34,8 +35,8 @@ class Settings(BaseSettings):
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
-    openai_api_key: str = None
-    conversation: str = None
+    openai_api_key: str
+    conversation: str
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -52,11 +53,14 @@ async def read_form(request: Request):
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ) -> None:
-    schedule_response = openai_utils.getResponseFromOpenai(message)
-    parsed_date = json.loads(schedule_response)
+    schedule_response: str = openai_utils.getResponseFromOpenai(message)
+    parsed_response: dict[str, str] = json.loads(schedule_response)
+
+    calender_utils.add_event_to_calendar(parsed_response)
+
     return templates.TemplateResponse(
         "show_response.html",
-        {"request": request, "data": parsed_date},
+        {"request": request, "data": parsed_response},
     )
 
 
