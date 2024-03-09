@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Generator
 
 import uvicorn
 from fastapi import Depends
@@ -13,6 +14,7 @@ from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 from settings import settings
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from utils import calender_utils
 from utils import openai_utils
@@ -63,7 +65,7 @@ def run_app() -> None:
 
 
 # database connection
-def get_db():
+def get_db() -> Generator[Session, None, None]:
     db = session()
     try:
         yield db
