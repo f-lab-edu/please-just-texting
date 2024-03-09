@@ -35,8 +35,8 @@ class Settings(BaseSettings):
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
-    openai_api_key: str = None
-    conversation: str = None
+    openai_api_key: str
+    conversation: str
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -53,8 +53,8 @@ async def read_form(request: Request):
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ) -> None:
-    schedule_response = openai_utils.getResponseFromOpenai(message)
-    parsed_response = json.loads(schedule_response)
+    schedule_response: str = openai_utils.getResponseFromOpenai(message)
+    parsed_response: dict[str, str] = json.loads(schedule_response)
 
     calender_utils.add_event_to_calendar(parsed_response)
 
