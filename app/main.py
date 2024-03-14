@@ -25,7 +25,7 @@ from utils import openai_utils
 app = FastAPI()
 
 # database engine
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = f"mysql+mysqldb://{settings.database_username}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}"
 engine = create_engine(DATABASE_URL, echo=True)
 
 # session
