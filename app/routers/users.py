@@ -17,25 +17,21 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-# create user
 @router.post("/users/", response_model=UserResponse)
 async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)) -> User:
     return await create_user(user=user, db=db)
 
 
-# search user
 @router.get("/users/{user_id}", response_model=UserResponse)
 async def read_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> User:
     return await get_user(user_id=user_id, db=db)
 
 
-# search users
 @router.get("/users/", response_model=list[UserResponse])
 async def read_users_endpoint(db: Session = Depends(get_db)) -> list[User]:
     return await get_users(db=db)
 
 
-# update user
 @router.put("/users/{user_id}", response_model=UserResponse)
 async def update_user_endpoint(
     user_id: int, user: UpdateUser, db: Session = Depends(get_db)
@@ -43,7 +39,6 @@ async def update_user_endpoint(
     return await update_user(db=db, user_id=user_id, user=user)
 
 
-# delete user
 @router.delete("/users/{user_id}", status_code=204)
 async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> dict:
     await delete_user(db=db, user_id=user_id)
