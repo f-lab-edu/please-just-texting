@@ -11,10 +11,16 @@ class Settings(BaseSettings):
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
-    database_url: str = Field(..., env="DATABASE_URL")
+
+    database_host: str
+    database_port: int
+    database_username: str
+    database_password: str
+    database_name: str
 
     class Config:
         env_file = ".env"
+        env_prefix = "CONF_"
 
 
 settings = Settings()
