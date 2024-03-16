@@ -16,12 +16,8 @@ from settings import settings
 from utils import calender_utils
 from utils import openai_utils
 
-# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
-# from crud import get_user
-
 app = FastAPI()
 
-# template
 templates = Jinja2Templates(directory="app/templates")
 
 
@@ -65,16 +61,6 @@ def run_app() -> None:
         port=settings.conf_port,
         reload=settings.conf_debug,
     )
-
-
-# TODO: {I've temporarily commented the database code while testing the calendar and OpenAI function. Once I verify these work, I'll de-comment the database code}
-# # CRUD
-# @app.get("/users/{user_id}")
-# def read_user(user_id: int, db: Session = Depends(get_db)):
-#     user = get_user(db, user_id)
-#     if user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return user
 
 
 def main() -> None:
