@@ -21,6 +21,4 @@ def getResponseFromOpenai(message: str) -> str:
     ]
 
     response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
-    print("response here~~~~~~~~~~~")
-    print(response)
     return response.choices[0].message.content.strip()
