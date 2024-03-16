@@ -34,7 +34,8 @@ services:
       DATABASE_URL: "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
       - ./alembic:/src/alembic
-      - ./app/models.py:/src/app/models.py
+      - ./alembic.ini:/src/alembic.ini
+      - ./app/models/base.py:/src/app/models/base.py
     depends_on:
       db:
         condition: service_healthy

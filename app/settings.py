@@ -1,5 +1,9 @@
+from pathlib import Path
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
@@ -8,11 +12,15 @@ class Settings(BaseSettings):
     conf_port: int = 8000
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
 
-    user_name: str = Field(..., env="USER_NAME")
-    user_password: str = Field(..., env="USER_PASSWORD")
+    database_host: str
+    database_port: int
+    database_username: str
+    database_password: str
+    database_name: str
 
     class Config:
         env_file = ".env"
+        env_prefix = "CONF_"
 
 
 settings = Settings()
