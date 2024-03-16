@@ -28,9 +28,9 @@ services:
     environment:
       DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
-      - ./alembic:/src/app/alembic
-      - ./alembic.ini:/src/app/alembic.ini
-      - ./app/models/base_model.py:/src/app/models/base_model.py
+      - ./alembic:/src/alembic
+      - ./alembic.ini:/src/alembic.ini
+      - ./app/models/base.py:/src/app/models/base.py
     depends_on:
       - db
 

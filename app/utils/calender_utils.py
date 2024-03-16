@@ -6,6 +6,7 @@ import pickle
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from settings import PROJECT_ROOT
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
@@ -14,8 +15,8 @@ logger = logging.getLogger()
 
 def get_calendar_service() -> Request:
     creds = None
-    token_path = "../token.pickle"
 
+    token_path = PROJECT_ROOT / "token.pickle"
     if os.path.exists(token_path):
         with open(token_path, "rb") as token:
             creds = pickle.load(token)
@@ -34,7 +35,7 @@ def get_calendar_service() -> Request:
     return service
 
 
-def add_event_to_calendar(parsed_response: dict) -> None:
+def add_event_to_calendar(parsed_response: dict[str, str]) -> None:
     service = get_calendar_service()
 
     title = parsed_response["title"]
