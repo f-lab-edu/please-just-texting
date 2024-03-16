@@ -1,6 +1,4 @@
 import json
-import os
-from typing import Generator
 
 import schemas
 import uvicorn

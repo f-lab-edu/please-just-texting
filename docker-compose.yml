@@ -8,10 +8,15 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=mysql+mysqldb://user:password@db/mydatabase
+      DATABASE_URL: "mysql+mysqldb://user:password@db/mydatabase"
 
   db:
-    image: mysql:8.0
+    image: mysql:latest
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MYSQL_DATABASE=mydatabase
@@ -26,13 +31,15 @@ services:
       dockerfile: Dockerfile
     command: /bin/sh -c "alembic revision --autogenerate -m 'Migration' && alembic upgrade head"
     environment:
-      DATABASE_URL : "mysql+mysqldb://user:password@db/mydatabase"
+      DATABASE_URL: "mysql+mysqldb://user:password@db/mydatabase"
     volumes:
       - ./alembic:/src/alembic
       - ./alembic.ini:/src/alembic.ini
       - ./app/models/base.py:/src/app/models/base.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
 
 volumes:
   db_data:
