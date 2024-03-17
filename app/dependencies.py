@@ -1,8 +1,8 @@
 import os
 from typing import Generator
 
+from app.settings import settings
 from dotenv import load_dotenv
-from settings import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker

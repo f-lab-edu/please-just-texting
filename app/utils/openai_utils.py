@@ -1,9 +1,9 @@
 # type: ignore
+from app.settings import settings
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import select_autoescape
 from openai import OpenAI
-from settings import settings
 
 client = OpenAI(
     api_key=settings.openai_api_key,

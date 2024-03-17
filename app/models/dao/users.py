@@ -1,10 +1,10 @@
 from typing import Optional
 
+from app.models.base import User
+from app.schemas import UpdateUser
+from app.schemas import UserCreate
 from fastapi import HTTPException
-from models.base import User
 from passlib.context import CryptContext
-from schemas import UpdateUser
-from schemas import UserCreate
 from sqlalchemy.orm import Session
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
