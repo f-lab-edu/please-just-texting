@@ -5,8 +5,4 @@
 
 ## Getting Started
 
-TBD: Please describe how to start this project (including bash commands)
-
 ### Installation
-
-TBD: Put the guide line to install the deps and pre-requisites.
