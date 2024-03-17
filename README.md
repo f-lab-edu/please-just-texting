@@ -12,3 +12,27 @@ Run the following:
   $ make
 </code>
 </pre>
+
+## Tech Stack
+This project is built with:
+- **Programming Language:**   
+  - Python
+
+- **Framwork:**
+  - FastAPI
+  - Jinja2
+ 
+- **Database:**
+  - MySQL
+  - Alembic
+ 
+- **Containerization:**
+  - Docker
+ 
+- **Code Quality Tools:**
+  - black
+  - flake8
+  - isort
+ 
+- **Data Validation:**
+  - Pydantic
