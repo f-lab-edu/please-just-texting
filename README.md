@@ -6,3 +6,9 @@
 ## Getting Started
 
 ### Installation
+Run the following:
+<pre>
+<code>
+  $ make
+</code>
+</pre>
