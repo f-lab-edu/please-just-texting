@@ -7,11 +7,10 @@
 
 ### Installation
 Run the following:
-<pre>
-<code>
-  $ make
-</code>
-</pre>
+
+```
+make
+```
 
 ## Tech Stack
 This project is built with:
