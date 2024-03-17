@@ -1,14 +1,14 @@
 import json
 
 import uvicorn
+from app.settings import settings
+from app.utils import calender_utils
+from app.utils import openai_utils
 from fastapi import FastAPI
 from fastapi import Form
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from settings import settings
-from utils import calender_utils
-from utils import openai_utils
 
 app = FastAPI()
 

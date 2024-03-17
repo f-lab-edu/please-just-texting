@@ -1,17 +1,17 @@
-from dependencies import get_db
+from app.dependencies import get_db
+from app.models.base import User
+from app.models.dao.users import create_user
+from app.models.dao.users import delete_user
+from app.models.dao.users import get_user
+from app.models.dao.users import get_users
+from app.models.dao.users import update_user
+from app.schemas import UpdateUser
+from app.schemas import UserCreate
+from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import Form
 from fastapi import HTTPException
-from models.base import User
-from models.dao.users import create_user
-from models.dao.users import delete_user
-from models.dao.users import get_user
-from models.dao.users import get_users
-from models.dao.users import update_user
-from schemas import UpdateUser
-from schemas import UserCreate
-from schemas import UserResponse
 from sqlalchemy.orm import Session
 
 router = APIRouter()
