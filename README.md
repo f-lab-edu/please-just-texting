@@ -14,24 +14,10 @@ make
 
 ## Tech Stack
 This project is built with:
-- **Programming Language:**   
-  - Python
-
-- **Framwork:**
-  - FastAPI
-  - Jinja2
- 
-- **Database:**
-  - MySQL
-  - Alembic
- 
-- **Containerization:**
-  - Docker
- 
-- **Code Quality Tools:**
-  - black
-  - flake8
-  - isort
- 
-- **Data Validation:**
-  - Pydantic
+|Category|Technologies|
+|:---|:---|
+|**Framework**|FastAPI, Jinja2|
+|**Database**|MySQL, Alembic|
+|**Contrainerization**|Docker|
+|**Code Quality Tools**|black, flake8, isort|
+|**Data Validation**|Pydantic|
