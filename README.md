@@ -5,8 +5,19 @@
 
 ## Getting Started
 
-TBD: Please describe how to start this project (including bash commands)
-
 ### Installation
+Run the following:
 
-TBD: Put the guide line to install the deps and pre-requisites.
+```bash
+make
+```
+
+## Tech Stack
+This project is built with:
+|Category|Technologies|
+|:---|:---|
+|**Framework**|FastAPI, Jinja2|
+|**Database**|MySQL, Alembic|
+|**Contrainerization**|Docker|
+|**Code Quality Tools**|black, flake8, isort|
+|**Data Validation**|Pydantic|
