@@ -8,7 +8,7 @@
 ### Installation
 Run the following:
 
-```
+```bash
 make
 ```
 
