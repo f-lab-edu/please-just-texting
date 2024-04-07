@@ -4,17 +4,35 @@ import os
 import pickle
 
 from app.settings import PROJECT_ROOT
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
+"""
+============================================================
+Replaced on: 2024-4-7
+The current application does not use a web browser.
+It's impossible to perform authentication via the conventional OAuth 2.0 method.
+For future changes, leave code with comments.
+
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+============================================================
+"""
+
 
 logger = logging.getLogger()
 
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
-def get_calendar_service() -> Request:
+
+def get_calendar_service():
     creds = None
+
+    """
+    ============================================================
+    Replaced on: 2024-4-7
+    The current application does not use a web browser.
+    It's impossible to perform authentication via the conventional OAuth 2.0 method.
+    For future changes, leave code with comments.
 
     token_path = PROJECT_ROOT / "token.pickle"
     if os.path.exists(token_path):
@@ -30,6 +48,9 @@ def get_calendar_service() -> Request:
 
         with open("token.pickle", "wb") as token:
             pickle.dump(creds, token)
+
+    ============================================================
+    """
 
     service = build("calendar", "v3", credentials=creds)
     return service
@@ -56,5 +77,4 @@ def add_event_to_calendar(parsed_response: dict[str, str]) -> None:
     }
 
     event = service.events().insert(calendarId="primary", body=event).execute()
-
     logger.debug(f"Event created: {event.get('htmlLink')}")
