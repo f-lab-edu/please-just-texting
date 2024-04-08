@@ -10,7 +10,9 @@ class Settings(BaseSettings):
     conf_debug: bool = True
     conf_host: str = "0.0.0.0"
     conf_port: int = 8000
+
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
+    imporsonation_account: str = Field(..., env="IMPERSONATION_ACCOUNT")
 
     database_host: str
     database_port: int

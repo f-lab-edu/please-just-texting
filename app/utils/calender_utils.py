@@ -4,6 +4,7 @@ import os
 import pickle
 
 from app.settings import PROJECT_ROOT
+from app.settings import settings
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -12,7 +13,7 @@ logger = logging.getLogger()
 
 SERVICE_ACCOUNT_FILE = PROJECT_ROOT / "credentials.json"
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
-USER_TO_IMPERSONATE = "dolggul2@dolggul.com"
+USER_TO_IMPERSONATE = settings.impersonation_account
 
 
 def get_calendar_service() -> Request:
