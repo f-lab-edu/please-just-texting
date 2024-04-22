@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     conf_port: int = 8000
 
     openai_api_key: str = Field(..., env="OPENAI_API_KEY")
-    imporsonation_account: str = Field(..., env="IMPERSONATION_ACCOUNT")
+    impersonation_account: str = Field(..., env="IMPERSONATION_ACCOUNT")
 
     database_host: str
     database_port: int
