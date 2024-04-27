@@ -10,8 +10,6 @@ from app.schemas import UserCreate
 from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import Form
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -42,4 +40,3 @@ async def update_user_endpoint(
 @router.delete("/users/{user_id}", status_code=204)
 async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> dict:
     await delete_user(db=db, user_id=user_id)
-    return {"detail": "User deleted successfully"}
