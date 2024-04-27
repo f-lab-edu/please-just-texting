@@ -25,6 +25,15 @@ async def read_form(request: Request):
     return templates.TemplateResponse("login_form.html", {"request": request})
 
 
+# @router.get("/create_account", response_class=HTMLResponse)
+# async def read_form(request: Request):
+#     return templates.TemplateResponse("create_account_form.html", {"request": request})
+
+# @router.get("/find_account", response_class=HTMLResponse)
+# async def read_form(request: Request):
+#     return templates.TemplateResponse("find_account_form.html", {"request": request})
+
+
 @router.post("/users/", response_model=UserResponse)
 async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)) -> User:
     return await create_user(user=user, db=db)
@@ -48,5 +57,5 @@ async def update_user_endpoint(
 
 
 @router.delete("/users/{user_id}", status_code=204)
-async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> dict:
+async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> None:
     await delete_user(db=db, user_id=user_id)
