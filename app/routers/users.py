@@ -20,18 +20,33 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/users", response_class=HTMLResponse)
-async def read_form(request: Request):
+@router.get("/login", response_class=HTMLResponse)
+async def read_login_form(request: Request):
     return templates.TemplateResponse("login_form.html", {"request": request})
 
 
-# @router.get("/create_account", response_class=HTMLResponse)
-# async def read_form(request: Request):
-#     return templates.TemplateResponse("create_account_form.html", {"request": request})
+@router.get("/create_account", response_class=HTMLResponse)
+async def read_create_account_form(request: Request):
+    return templates.TemplateResponse("create_account_form.html", {"request": request})
 
-# @router.get("/find_account", response_class=HTMLResponse)
-# async def read_form(request: Request):
-#     return templates.TemplateResponse("find_account_form.html", {"request": request})
+
+@router.get("/create_account/response", response_class=HTMLResponse)
+async def read_create_account_response_form(request: Request):
+    return templates.TemplateResponse(
+        "create_account_response.form.html", {"request": request}
+    )
+
+
+@router.get("/find_account", response_class=HTMLResponse)
+async def read_find_account_form(request: Request):
+    return templates.TemplateResponse("find_account_form.html", {"request": request})
+
+
+@router.get("/find_account/response", response_class=HTMLResponse)
+async def read_find_account_response_form(request: Request):
+    return templates.TemplateResponse(
+        "find_account_resopnse_form.html", {"request": request}
+    )
 
 
 @router.post("/users/", response_model=UserResponse)
