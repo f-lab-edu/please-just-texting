@@ -10,9 +10,19 @@ from app.schemas import UserCreate
 from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 router = APIRouter()
+
+templates = Jinja2Templates(directory="app/templates")
+
+
+@router.get("/users", response_class=HTMLResponse)
+async def read_form(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
 
 
 @router.post("/users/", response_model=UserResponse)
