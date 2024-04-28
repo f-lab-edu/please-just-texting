@@ -1,4 +1,3 @@
-import os
 from typing import Generator
 
 from app.settings import settings
@@ -9,7 +8,14 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-DATABASE_URL = f"mysql+mysqldb://{settings.database_username}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}"
+DATABASE_URL = ("mysql+mysqldb://{username}:{password}@{host}:{port}/{dbname}").format(
+    username=settings.database_username,
+    password=settings.database_password,
+    host=settings.database_host,
+    port=settings.database_port,
+    dbname=settings.database_name,
+)
+
 engine = create_engine(DATABASE_URL, echo=True)
 
 session = sessionmaker(bind=engine)
