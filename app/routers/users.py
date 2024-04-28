@@ -10,6 +10,7 @@ from app.schemas import UserCreate
 from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import Form
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -30,6 +31,20 @@ async def read_create_account_form(request: Request):
     return templates.TemplateResponse("create_account_form.html", {"request": request})
 
 
+@router.post("/create_account/submit", response_model=UserResponse)
+async def create_user_endpoint(
+    username: str = Form(...),
+    password: str = Form(...),
+    email: str = Form(...),
+    db: Session = Depends(get_db),
+) -> User:
+    user = UserCreate(name=username, password=password, user_email=email)
+    db_user = await create_user(user=user, db=db)
+    return templates.TemplateResponse(
+        "create_account_response_form.html", {"request": db_user}
+    )
+
+
 @router.get("/create_account/response", response_class=HTMLResponse)
 async def read_create_account_response_form(request: Request):
     return templates.TemplateResponse(
@@ -47,11 +62,6 @@ async def read_find_account_response_form(request: Request):
     return templates.TemplateResponse(
         "find_account_resopnse_form.html", {"request": request}
     )
-
-
-@router.post("/users/", response_model=UserResponse)
-async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)) -> User:
-    return await create_user(user=user, db=db)
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
