@@ -14,8 +14,8 @@ def check_user_exists(db: Session, user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
 
 
-def check_user_duplicate(db: Session, email: str):
-    db_user = db.query(User).filter(User.email == email).first()
+async def check_user_duplicate(db: Session, email: str) -> None:
+    db_user = await db.query(User).filter(User.email == email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="eamil already exists")
 
