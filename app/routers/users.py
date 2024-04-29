@@ -1,3 +1,5 @@
+from typing import Any
+
 from app.dependencies import get_db
 from app.models.base import User
 from app.models.dao.users import create_user
@@ -31,17 +33,18 @@ async def read_create_account_form(request: Request):
     return templates.TemplateResponse("create_account_form.html", {"request": request})
 
 
-@router.post("/create_account/submit", response_model=UserResponse)
+@router.post("/create_account/submit", response_class=HTMLResponse)
 async def create_user_endpoint(
+    request: Request,
     username: str = Form(...),
     password: str = Form(...),
     email: str = Form(...),
     db: Session = Depends(get_db),
-) -> User:
+) -> Any:
     user = UserCreate(name=username, password=password, user_email=email)
     db_user = await create_user(user=user, db=db)
     return templates.TemplateResponse(
-        "create_account_response_form.html", {"request": db_user}
+        "create_account_response_form.html", {"request": request, "data": db_user}
     )
 
 
