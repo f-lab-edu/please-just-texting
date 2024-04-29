@@ -1,5 +1,3 @@
-from typing import Optional
-
 from app.models.base import User
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
@@ -32,7 +30,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
 
-def create_user(db: Session, user: UserCreate) -> User:
+async def create_user(db: Session, user: UserCreate) -> User:
     check_user_duplicate(db, user.user_email)
     password_hash = pwd_context.hash(user.password)
     db_user = User(name=user.name, password_hash=password_hash, email=user.user_email)
