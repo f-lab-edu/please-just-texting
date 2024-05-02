@@ -1,6 +1,7 @@
 from app.models.base import User
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
+from app.schemas import UserLogin
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -8,10 +9,10 @@ from sqlalchemy.orm import Session
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def check_user_exists(db: Session, user_id: int):
-    db_user = db.query(User).filter(User.id == user_id).first()
-    if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+def check_user_exists(db: Session, user: UserLogin):
+    db_user = db.query(User).filter(User.name == user.name).first()
+    if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid username or passowrd")
 
 
 def check_user_duplicate(db: Session, email: str):
