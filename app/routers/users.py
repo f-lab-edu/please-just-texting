@@ -2,6 +2,7 @@ from typing import Any
 
 from app.dependencies import get_db
 from app.models.base import User
+from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_user
@@ -9,6 +10,7 @@ from app.models.dao.users import get_users
 from app.models.dao.users import update_user
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
+from app.schemas import UserLogin
 from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
@@ -26,6 +28,18 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/login", response_class=HTMLResponse)
 async def read_login_form(request: Request):
     return templates.TemplateResponse("login_form.html", {"request": request})
+
+
+@router.get("/login/submit", response_class=HTMLResponse)
+async def login(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db),
+) -> Any:
+    user = UserLogin(name=username, password=password)
+    await check_user_exists(db, user)
+    return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
 @router.get("/create_account", response_class=HTMLResponse)
