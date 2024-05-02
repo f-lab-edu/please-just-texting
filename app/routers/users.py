@@ -30,7 +30,7 @@ async def read_login_form(request: Request):
     return templates.TemplateResponse("login_form.html", {"request": request})
 
 
-@router.get("/login/submit", response_class=HTMLResponse)
+@router.post("/login/submit", response_class=HTMLResponse)
 async def login(
     request: Request,
     username: str = Form(...),
