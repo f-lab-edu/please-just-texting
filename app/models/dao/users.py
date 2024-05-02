@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def check_user_exists(db: Session, user: UserLogin):
+async def check_user_exists(db: Session, user: UserLogin):
     db_user = db.query(User).filter(User.name == user.name).first()
     if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid username or passowrd")
