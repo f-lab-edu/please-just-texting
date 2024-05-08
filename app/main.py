@@ -26,7 +26,7 @@ async def read_form(request: Request):
 @app.post("/submit", response_class=HTMLResponse)
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
-) -> None:
+):
     schedule_response: str = openai_utils.getResponseFromOpenai(message)
     parsed_response: dict[str, str] = json.loads(schedule_response)
 

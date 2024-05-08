@@ -80,12 +80,12 @@ async def read_find_account_response_form(request: Request):
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
-async def read_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> User:
+async def read_user_endpoint(user_id: int, db: Session = Depends(get_db)):
     return await get_user(user_id=user_id, db=db)
 
 
 @router.get("/users/", response_model=list[UserResponse])
-async def read_users_endpoint(db: Session = Depends(get_db)) -> list[User]:
+async def read_users_endpoint(db: Session = Depends(get_db)):
     return await get_users(db=db)
 
 
@@ -97,5 +97,5 @@ async def update_user_endpoint(
 
 
 @router.delete("/users/{user_id}", status_code=204)
-async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)) -> None:
+async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
     await delete_user(db=db, user_id=user_id)
