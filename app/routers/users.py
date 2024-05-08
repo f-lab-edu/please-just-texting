@@ -1,5 +1,3 @@
-from typing import Any
-
 from app.dependencies import get_db
 from app.models.base import User
 from app.models.dao.users import check_user_exists
@@ -36,7 +34,7 @@ async def login(
     username: str = Form(...),
     password: str = Form(...),
     db: Session = Depends(get_db),
-) -> Any:
+):
     user = UserLogin(name=username, password=password)
     await check_user_exists(db, user)
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
@@ -54,7 +52,7 @@ async def create_user_endpoint(
     password: str = Form(...),
     email: str = Form(...),
     db: Session = Depends(get_db),
-) -> Any:
+):
     user = UserCreate(name=username, password=password, user_email=email)
     db_user = await create_user(user=user, db=db)
     return templates.TemplateResponse(
