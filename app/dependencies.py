@@ -2,13 +2,13 @@ from typing import Generator
 
 from app.settings import settings
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
 
 load_dotenv()
 
-DATABASE_URL = ("mysql+mysqldb://{username}:{password}@{host}:{port}/{dbname}").format(
+DATABASE_URL = ("mysql+asyncmy://{username}:{password}@{host}:{port}/{dbname}").format(
     username=settings.database_username,
     password=settings.database_password,
     host=settings.database_host,
@@ -16,12 +16,12 @@ DATABASE_URL = ("mysql+mysqldb://{username}:{password}@{host}:{port}/{dbname}").
     dbname=settings.database_name,
 )
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
-session = sessionmaker(bind=engine)
+session = async_sessionmaker(bind=engine)
 
 
-def get_db() -> Generator[Session, None, None]:
+def get_db() -> Generator[AsyncSession, None, None]:
     db = session()
     try:
         yield db
