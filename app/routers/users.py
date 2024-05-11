@@ -3,6 +3,7 @@ from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_user
+from app.models.dao.users import update_user
 from app.schemas import UserCreate
 from app.schemas import UserLogin
 from fastapi import APIRouter
@@ -67,6 +68,26 @@ async def read_find_account_response_form(
     db_user = await get_user(email=email, db=db)
     return templates.TemplateResponse(
         "find_account_response_form.html", {"request": request, "data": db_user}
+    )
+
+
+@router.get("/reset_password", response_class=HTMLResponse)
+async def read_password_form(request: Request):
+    return templates.TemplateResponse("reset_password_form.html", {"request": request})
+
+
+@router.post("/reset_password/submit", response_class=HTMLResponse)
+async def read_password_response_form(
+    request: Request,
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    user = UserCreate(name=username, password=password, user_email=email)
+    await update_user(user=user, db=db)
+    return templates.TemplateResponse(
+        "reset_password_response_form.html", {"request": request}
     )
 
 
