@@ -60,7 +60,7 @@ async def read_find_account_form(request: Request):
     return templates.TemplateResponse("find_account_form.html", {"request": request})
 
 
-@router.post("/find_account/response", response_class=HTMLResponse)
+@router.post("/find_account/submit", response_class=HTMLResponse)
 async def read_find_account_response_form(
     request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
 ):
