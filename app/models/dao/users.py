@@ -26,7 +26,7 @@ async def check_user_exists(db: AsyncSession, user: UserLogin):
 async def check_user_duplicate(db: AsyncSession, email: str):
     db_user = await get_db_user(db, email)
     if db_user:
-        raise HTTPException(status_code=400, detail="eamil already exists")
+        raise HTTPException(status_code=400, detail="email already exists")
 
 
 async def get_user(db: AsyncSession, email: int) -> User:
