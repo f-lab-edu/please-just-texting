@@ -16,7 +16,7 @@ from fastapi import Form
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -33,7 +33,7 @@ async def login(
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     user = UserLogin(name=username, password=password)
     await check_user_exists(db, user)
@@ -51,7 +51,7 @@ async def create_user_endpoint(
     username: str = Form(...),
     password: str = Form(...),
     email: str = Form(...),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     user = UserCreate(name=username, password=password, user_email=email)
     db_user = await create_user(user=user, db=db)
@@ -80,22 +80,22 @@ async def read_find_account_response_form(request: Request):
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
-async def read_user_endpoint(user_id: int, db: Session = Depends(get_db)):
+async def read_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
     return await get_user(user_id=user_id, db=db)
 
 
 @router.get("/users/", response_model=list[UserResponse])
-async def read_users_endpoint(db: Session = Depends(get_db)):
+async def read_users_endpoint(db: AsyncSession = Depends(get_db)):
     return await get_users(db=db)
 
 
 @router.put("/users/{user_id}", response_model=UserResponse)
 async def update_user_endpoint(
-    user_id: int, user: UpdateUser, db: Session = Depends(get_db)
+    user_id: int, user: UpdateUser, db: AsyncSession = Depends(get_db)
 ) -> User:
     return await update_user(db=db, user_id=user_id, user=user)
 
 
 @router.delete("/users/{user_id}", status_code=204)
-async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
+async def delete_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
     await delete_user(db=db, user_id=user_id)
