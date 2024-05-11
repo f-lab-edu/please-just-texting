@@ -1,15 +1,10 @@
 from app.dependencies import get_db
-from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_user
-from app.models.dao.users import get_users
-from app.models.dao.users import update_user
-from app.schemas import UpdateUser
 from app.schemas import UserCreate
 from app.schemas import UserLogin
-from app.schemas import UserResponse
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import Form
@@ -60,13 +55,6 @@ async def create_user_endpoint(
     )
 
 
-@router.get("/create_account/response", response_class=HTMLResponse)
-async def read_create_account_response_form(request: Request):
-    return templates.TemplateResponse(
-        "create_account_response.form.html", {"request": request}
-    )
-
-
 @router.get("/find_account", response_class=HTMLResponse)
 async def read_find_account_form(request: Request):
     return templates.TemplateResponse("find_account_form.html", {"request": request})
@@ -80,23 +68,6 @@ async def read_find_account_response_form(
     return templates.TemplateResponse(
         "find_account_response_form.html", {"request": request, "data": db_user}
     )
-
-
-@router.get("/users/{user_id}", response_model=UserResponse)
-async def read_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
-    return await get_user(user_id=user_id, db=db)
-
-
-@router.get("/users/", response_model=list[UserResponse])
-async def read_users_endpoint(db: AsyncSession = Depends(get_db)):
-    return await get_users(db=db)
-
-
-@router.put("/users/{user_id}", response_model=UserResponse)
-async def update_user_endpoint(
-    user_id: int, user: UpdateUser, db: AsyncSession = Depends(get_db)
-) -> User:
-    return await update_user(db=db, user_id=user_id, user=user)
 
 
 @router.delete("/users/{user_id}", status_code=204)
