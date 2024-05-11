@@ -73,9 +73,12 @@ async def read_find_account_form(request: Request):
 
 
 @router.post("/find_account/response", response_class=HTMLResponse)
-async def read_find_account_response_form(request: Request):
+async def read_find_account_response_form(
+    request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
+):
+    db_user = await get_user(email=email, db=db)
     return templates.TemplateResponse(
-        "find_account_response_form.html", {"request": request}
+        "find_account_response_form.html", {"request": request, "data": db_user}
     )
 
 

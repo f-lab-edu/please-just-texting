@@ -29,10 +29,10 @@ async def check_user_duplicate(db: AsyncSession, email: str):
         raise HTTPException(status_code=400, detail="eamil already exists")
 
 
-async def get_user(db: AsyncSession, user_id: int) -> User:
-    await check_user_exists(db, user_id)
-    db_user = await get_db_user(db, user_id)
-    return db_user
+async def get_user(db: AsyncSession, email: int) -> User:
+    statement = select(User).where(User.email == email)
+    result = await db.execute(statement)
+    return result.scalar()
 
 
 async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[User]:
