@@ -58,9 +58,8 @@ async def update_user(db: AsyncSession, user: UpdateUser) -> User:
     db_user = result.scalar()
     if not db_user:
         raise HTTPException(status_code=401, detail="Invalid username or email")
-    user_data = user.model_dump(exclude_unset=True)
-    for key, value in user_data.items():
-        setattr(db_user, key, value)
+    hashed_password = pwd_context.hash(user.password)
+    db_user.password_hash = hashed_password
     await db.commit()
     return db_user
 
