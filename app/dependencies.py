@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import AsyncGenerator
 
 from app.settings import settings
 from dotenv import load_dotenv
@@ -21,9 +21,9 @@ engine = create_async_engine(DATABASE_URL, echo=True)
 session = async_sessionmaker(bind=engine)
 
 
-def get_db() -> Generator[AsyncSession, None, None]:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     db = session()
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
