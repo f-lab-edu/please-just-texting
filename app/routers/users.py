@@ -82,10 +82,10 @@ async def read_password_response_form(
     request: Request,
     username: str = Form(...),
     email: str = Form(...),
-    password: str = Form(...),
+    new_password: str = Form(...),
     db: AsyncSession = Depends(get_db),
 ):
-    user = UpdateUser(name=username, password=password, user_email=email)
+    user = UpdateUser(name=username, password=new_password, user_email=email)
     await update_user(user=user, db=db)
     return templates.TemplateResponse(
         "reset_password_response_form.html", {"request": request}
