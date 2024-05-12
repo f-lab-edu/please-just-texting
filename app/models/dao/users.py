@@ -50,8 +50,14 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     return db_user
 
 
-async def update_user(db: AsyncSession, user_id: int, user: UpdateUser) -> User:
-    db_user = await db.query(User).filter(User.id == user_id).first()
+async def update_user(db: AsyncSession, user: UpdateUser) -> User:
+    statement = (
+        select(User).where(User.name == user.name).where(User.email == user.user_email)
+    )
+    result = await db.execute(statement)
+    db_user = result.scalar()
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid username or email")
     user_data = user.model_dump(exclude_unset=True)
     for key, value in user_data.items():
         setattr(db_user, key, value)
