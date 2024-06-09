@@ -12,6 +12,10 @@ Run the following:
 make
 ```
 
+## Architecture
+
+![architecture](./assets/architecture)
+
 ## Tech Stack
 This project is built with:
 |Category|Technologies|
