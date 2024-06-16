@@ -12,6 +12,10 @@ Run the following:
 make
 ```
 
+## Architecture
+
+![architecture](./assets/architecture.png)
+
 ## Tech Stack
 This project is built with:
 |Category|Technologies|
