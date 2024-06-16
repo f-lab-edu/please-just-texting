@@ -14,7 +14,7 @@ make
 
 ## Architecture
 
-![architecture](./assets/architecture)
+![architecture](./assets/architecture.png)
 
 ## Tech Stack
 This project is built with:
