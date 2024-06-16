@@ -1,23 +1,29 @@
-import os
-from typing import Generator
+from typing import AsyncGenerator
 
 from app.settings import settings
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
 
 load_dotenv()
 
-DATABASE_URL = f"mysql+mysqldb://{settings.database_username}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}"
-engine = create_engine(DATABASE_URL, echo=True)
+DATABASE_URL = ("mysql+asyncmy://{username}:{password}@{host}:{port}/{dbname}").format(
+    username=settings.database_username,
+    password=settings.database_password,
+    host=settings.database_host,
+    port=settings.database_port,
+    dbname=settings.database_name,
+)
 
-session = sessionmaker(bind=engine)
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+session = async_sessionmaker(bind=engine)
 
 
-def get_db() -> Generator[Session, None, None]:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     db = session()
     try:
         yield db
     finally:
-        db.close()
+        await db.close()

@@ -1,6 +1,7 @@
 import json
 
 import uvicorn
+from app.routers import users
 from app.settings import settings
 from app.utils import calender_utils
 from app.utils import openai_utils
@@ -11,6 +12,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+
+app.include_router(users.router)
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -23,7 +26,7 @@ async def read_form(request: Request):
 @app.post("/submit", response_class=HTMLResponse)
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
-) -> None:
+):
     schedule_response: str = openai_utils.getResponseFromOpenai(message)
     parsed_response: dict[str, str] = json.loads(schedule_response)
 
