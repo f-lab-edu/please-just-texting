@@ -30,6 +30,10 @@ async def submit_dialogue(
     schedule_response: str = openai_utils.getResponseFromOpenai(message)
     parsed_response: dict[str, str] = json.loads(schedule_response)
 
+    if len(set(parsed_response.keys()) & {"title", "date", "description"}) < 3:
+        # error 표시용 html로 랜더링.
+        raise ValueError(f"{parsed_response=} is not valid.")
+
     calender_utils.add_event_to_calendar(parsed_response)
 
     return templates.TemplateResponse(
