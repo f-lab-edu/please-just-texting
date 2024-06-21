@@ -20,12 +20,12 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/login", response_class=HTMLResponse)
+@router.get("/signin", response_class=HTMLResponse)
 async def read_login_form(request: Request):
     return templates.TemplateResponse("login_form.html", {"request": request})
 
 
-@router.post("/login/submit", response_class=HTMLResponse)
+@router.post("/signin", response_class=HTMLResponse)
 async def login(
     request: Request,
     username: str = Form(...),
@@ -37,12 +37,12 @@ async def login(
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
-@router.get("/create_account", response_class=HTMLResponse)
+@router.get("/signup", response_class=HTMLResponse)
 async def read_create_account_form(request: Request):
     return templates.TemplateResponse("create_account_form.html", {"request": request})
 
 
-@router.post("/create_account/submit", response_class=HTMLResponse)
+@router.post("/signup", response_class=HTMLResponse)
 async def create_user_endpoint(
     request: Request,
     username: str = Form(...),
@@ -57,12 +57,12 @@ async def create_user_endpoint(
     )
 
 
-@router.get("/find_account", response_class=HTMLResponse)
+@router.get("/recovery", response_class=HTMLResponse)
 async def read_find_account_form(request: Request):
     return templates.TemplateResponse("find_account_form.html", {"request": request})
 
 
-@router.post("/find_account/submit", response_class=HTMLResponse)
+@router.post("/recovery", response_class=HTMLResponse)
 async def read_find_account_response_form(
     request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
 ):
@@ -72,12 +72,12 @@ async def read_find_account_response_form(
     )
 
 
-@router.get("/reset_password", response_class=HTMLResponse)
+@router.get("/password", response_class=HTMLResponse)
 async def read_password_form(request: Request):
     return templates.TemplateResponse("reset_password_form.html", {"request": request})
 
 
-@router.post("/reset_password/submit", response_class=HTMLResponse)
+@router.post("/password", response_class=HTMLResponse)
 async def read_password_response_form(
     request: Request,
     username: str = Form(...),

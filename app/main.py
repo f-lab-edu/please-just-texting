@@ -18,12 +18,12 @@ app.include_router(users.router)
 templates = Jinja2Templates(directory="app/templates")
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/conversation", response_class=HTMLResponse)
 async def read_form(request: Request):
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
 
 
-@app.post("/submit", response_class=HTMLResponse)
+@app.post("/conversation", response_class=HTMLResponse)
 async def submit_dialogue(
     request: Request, username: str = Form(...), message: str = Form(...)
 ):
