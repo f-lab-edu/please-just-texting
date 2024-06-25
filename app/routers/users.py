@@ -15,7 +15,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter()
+router = APIRouter(tags=["users"])
 
 templates = Jinja2Templates(directory="app/templates")
 
