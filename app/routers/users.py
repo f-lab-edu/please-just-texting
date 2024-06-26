@@ -20,11 +20,6 @@ router = APIRouter(tags=["users"])
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/signin", response_class=HTMLResponse)
-async def read_login_form(request: Request):
-    return templates.TemplateResponse("login_form.html", {"request": request})
-
-
 @router.post("/signin", response_class=HTMLResponse)
 async def login(
     request: Request,
@@ -35,11 +30,6 @@ async def login(
     user = UserLogin(name=username, password=password)
     await check_user_exists(db, user)
     return templates.TemplateResponse("dialogue_form.html", {"request": request})
-
-
-@router.get("/signup", response_class=HTMLResponse)
-async def read_create_account_form(request: Request):
-    return templates.TemplateResponse("create_account_form.html", {"request": request})
 
 
 @router.post("/signup", response_class=HTMLResponse)
@@ -57,11 +47,6 @@ async def create_user_endpoint(
     )
 
 
-@router.get("/recovery", response_class=HTMLResponse)
-async def read_find_account_form(request: Request):
-    return templates.TemplateResponse("find_account_form.html", {"request": request})
-
-
 @router.post("/recovery", response_class=HTMLResponse)
 async def read_find_account_response_form(
     request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
@@ -70,11 +55,6 @@ async def read_find_account_response_form(
     return templates.TemplateResponse(
         "find_account_response_form.html", {"request": request, "data": db_user}
     )
-
-
-@router.get("/password", response_class=HTMLResponse)
-async def read_password_form(request: Request):
-    return templates.TemplateResponse("reset_password_form.html", {"request": request})
 
 
 @router.post("/password", response_class=HTMLResponse)

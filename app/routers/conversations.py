@@ -11,11 +11,6 @@ router = APIRouter(default_response_class=HTMLResponse, tags=["conversation"])
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/conversation")
-async def read_form():
-    return templates.TemplateResponse(name="dialogue_form.html")
-
-
 @router.post("/conversation")
 async def submit_dialogue(message: str = Form(...)):
     schedule_response: str = openai_utils.getResponseFromOpenai(message)
