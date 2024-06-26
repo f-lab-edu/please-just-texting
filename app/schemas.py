@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from pydantic import EmailStr
+from pydantic import Field
 
 
 class UserLogin(BaseModel):
@@ -26,3 +27,7 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ConversationModel(BaseModel):
+    message: str = Field(...)
