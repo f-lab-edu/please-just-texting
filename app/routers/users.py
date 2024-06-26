@@ -6,38 +6,48 @@ from app.models.dao.users import get_user
 from app.models.dao.users import update_user
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
-from app.schemas import UserLogin
+from app.schemas import UserSignin
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import Form
+from fastapi import HTTPException
 from fastapi import Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter(tags=["users"])
+router = APIRouter(tags=["users"], default_response_class=JSONResponse)
 
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.post("/signin", response_class=HTMLResponse)
-async def login(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
+@router.post("/signin", summary="Signin")
+async def signin(
+    username: str,
+    password: str,
     db: AsyncSession = Depends(get_db),
-):
-    user = UserLogin(name=username, password=password)
-    await check_user_exists(db, user)
-    return templates.TemplateResponse("dialogue_form.html", {"request": request})
+) -> dict:
+    """
+    Authenticate a user
+
+    - **username (str)**: username to signin
+    - **password (str)**: password to signin
+    """
+
+    user = UserSignin(name=username, password=password)
+    try:
+        await check_user_exists(db, user)
+        return {"result": "success"}
+    except HTTPException:
+        return {"result": "fail"}
 
 
 @router.post("/signup", response_class=HTMLResponse)
 async def create_user_endpoint(
     request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    email: str = Form(...),
+    username: str,
+    password: str,
+    email: str,
     db: AsyncSession = Depends(get_db),
 ):
     user = UserCreate(name=username, password=password, user_email=email)
@@ -49,7 +59,7 @@ async def create_user_endpoint(
 
 @router.post("/recovery", response_class=HTMLResponse)
 async def read_find_account_response_form(
-    request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
+    request: Request, email: str, db: AsyncSession = Depends(get_db)
 ):
     db_user = await get_user(email=email, db=db)
     return templates.TemplateResponse(
@@ -60,9 +70,9 @@ async def read_find_account_response_form(
 @router.post("/password", response_class=HTMLResponse)
 async def read_password_response_form(
     request: Request,
-    username: str = Form(...),
-    email: str = Form(...),
-    new_password: str = Form(...),
+    username: str,
+    email: str,
+    new_password: str,
     db: AsyncSession = Depends(get_db),
 ):
     user = UpdateUser(name=username, password=new_password, user_email=email)

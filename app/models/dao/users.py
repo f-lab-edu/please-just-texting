@@ -1,7 +1,7 @@
 from app.models.base import User
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
-from app.schemas import UserLogin
+from app.schemas import UserSignin
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy import delete
@@ -17,7 +17,7 @@ async def get_db_user(db: AsyncSession, field):
     return result.scalar()
 
 
-async def check_user_exists(db: AsyncSession, user: UserLogin):
+async def check_user_exists(db: AsyncSession, user: UserSignin):
     db_user = await get_db_user(db, user.name)
     if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid username or passowrd")

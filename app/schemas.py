@@ -3,7 +3,7 @@ from pydantic import EmailStr
 from pydantic import Field
 
 
-class UserLogin(BaseModel):
+class UserSignin(BaseModel):
     name: str
     password: str
 
