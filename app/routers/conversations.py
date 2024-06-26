@@ -10,14 +10,15 @@ router = APIRouter(default_response_class=JSONResponse, tags=["conversation"])
 
 
 @router.post("/conversation")
-async def submit_dialogue(message: ConversationModel) -> dict:
+async def submit_dialogue(message: str) -> dict:
     """
     Create event to calendar with all information:
 
     - **message**: conversation containing date.
     """
 
-    schedule_response: str = openai_utils.getResponseFromOpenai(message.message)
+    conversation = ConversationModel(message=message)
+    schedule_response: str = openai_utils.getResponseFromOpenai(conversation.message)
     parsed_response: dict[str, str] = json.loads(schedule_response)
     calender_utils.add_event_to_calendar(parsed_response)
 
