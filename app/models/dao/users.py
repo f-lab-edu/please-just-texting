@@ -5,6 +5,7 @@ from app.schemas import UserSignin
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy import delete
+from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,7 +13,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 async def get_db_user(db: AsyncSession, field):
-    statement = select(User).where(User.name == field)
+    statement = select(User).where(or_(User.name == field, User.email == field))
     result = await db.execute(statement)
     return result.scalar()
 
@@ -23,13 +24,14 @@ async def check_user_exists(db: AsyncSession, user: UserSignin):
         raise HTTPException(status_code=401, detail="Invalid username or passowrd")
 
 
-async def check_user_duplicate(db: AsyncSession, email: str):
-    db_user = await get_db_user(db, email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="email already exists")
+async def check_user_duplicate(db: AsyncSession, user: UserCreate):
+    user_by_name = await get_db_user(db, user.name)
+    user_by_email = await get_db_user(db, user.user_email)
+    if user_by_name or user_by_email:
+        raise HTTPException(status_code=400, detail="username or email already exits")
 
 
-async def get_user(db: AsyncSession, email: int) -> User:
+async def get_user(db: AsyncSession, email: str) -> User:
     statement = select(User).where(User.email == email)
     result = await db.execute(statement)
     return result.scalar()
@@ -41,7 +43,7 @@ async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[U
 
 
 async def create_user(db: AsyncSession, user: UserCreate) -> User:
-    await check_user_duplicate(db, user.user_email)
+    await check_user_duplicate(db, user)
     password_hash = pwd_context.hash(user.password)
     db_user = User(name=user.name, password_hash=password_hash, email=user.user_email)
     db.add(db_user)

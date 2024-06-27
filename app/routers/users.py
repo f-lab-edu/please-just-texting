@@ -14,6 +14,7 @@ from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(tags=["users"], default_response_class=JSONResponse)
@@ -38,33 +39,41 @@ async def signin(
     try:
         await check_user_exists(db, user)
         return {"result": "success"}
-    except HTTPException:
-        return {"result": "fail"}
+    except HTTPException as e:
+        return {"result": "fail", "error": e}
 
 
-@router.post("/signup", response_class=HTMLResponse)
+@router.post("/signup", summary="signup")
 async def create_user_endpoint(
-    request: Request,
     username: str,
     password: str,
     email: str,
     db: AsyncSession = Depends(get_db),
-):
-    user = UserCreate(name=username, password=password, user_email=email)
+) -> dict:
+    """
+    Create user
+
+    - **username (str)**: username
+    - **password (str)**: password
+    - **email (str)** : user email(used for recovery)
+    """
+
+    try:
+        user = UserCreate(name=username, password=password, user_email=email)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
     db_user = await create_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "create_account_response_form.html", {"request": request, "data": db_user}
-    )
+    return {"result": "success", "username": db_user.name, "email": db_user.email}
 
 
-@router.post("/recovery", response_class=HTMLResponse)
+@router.post("/recovery", summary="recover account")
 async def read_find_account_response_form(
-    request: Request, email: str, db: AsyncSession = Depends(get_db)
-):
-    db_user = await get_user(email=email, db=db)
-    return templates.TemplateResponse(
-        "find_account_response_form.html", {"request": request, "data": db_user}
-    )
+    email: str, db: AsyncSession = Depends(get_db)
+) -> dict:
+    await get_user(email=email, db=db)
+    return {
+        "result": "success",
+    }
 
 
 @router.post("/password", response_class=HTMLResponse)
