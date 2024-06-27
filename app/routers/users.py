@@ -1,8 +1,9 @@
 from app.dependencies import get_db
+from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
-from app.models.dao.users import get_user
+from app.models.dao.users import get_db_user
 from app.models.dao.users import update_user
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
@@ -70,10 +71,16 @@ async def create_user_endpoint(
 async def read_find_account_response_form(
     email: str, db: AsyncSession = Depends(get_db)
 ) -> dict:
-    await get_user(email=email, db=db)
-    return {
-        "result": "success",
-    }
+    """
+    Find Username by email
+
+    - **email (str)**: email associated with username
+    """
+
+    user: User | None = await get_db_user(field=email, db=db)
+    if user:
+        return {"result": "success", "username": user.name}
+    raise HTTPException(status_code=404, detail="Username not found")
 
 
 @router.post("/password", response_class=HTMLResponse)

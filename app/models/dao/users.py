@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-async def get_db_user(db: AsyncSession, field):
+async def get_db_user(db: AsyncSession, field: str) -> User | None:
     statement = select(User).where(or_(User.name == field, User.email == field))
     result = await db.execute(statement)
     return result.scalar()
