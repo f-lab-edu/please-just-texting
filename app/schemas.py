@@ -31,3 +31,10 @@ class UserResponse(BaseModel):
 
 class ConversationModel(BaseModel):
     message: str = Field(...)
+
+
+class Response(BaseModel):
+    result: str
+    username: str | None = None
+    email: str | None = None
+    error: str | None = None

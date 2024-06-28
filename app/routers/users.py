@@ -5,6 +5,7 @@ from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_db_user
 from app.models.dao.users import update_user
+from app.schemas import Response
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
 from app.schemas import UserSignin
@@ -28,7 +29,7 @@ async def signin(
     username: str,
     password: str,
     db: AsyncSession = Depends(get_db),
-) -> dict:
+) -> Response:
     """
     Authenticate a user
 
@@ -39,9 +40,9 @@ async def signin(
     user = UserSignin(name=username, password=password)
     try:
         await check_user_exists(db, user)
-        return {"result": "success"}
     except HTTPException as e:
-        return {"result": "fail", "error": e}
+        return Response(result="fail", error=e)
+    return Response(result="success")
 
 
 @router.post("/signup", summary="signup")
@@ -50,7 +51,7 @@ async def create_user_endpoint(
     password: str,
     email: str,
     db: AsyncSession = Depends(get_db),
-) -> dict:
+) -> Response:
     """
     Create user
 
@@ -64,7 +65,7 @@ async def create_user_endpoint(
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors())
     db_user = await create_user(user=user, db=db)
-    return {"result": "success", "username": db_user.name, "email": db_user.email}
+    return Response(result="success", username=db_user.name, email=db_user.email)
 
 
 @router.post("/recovery", summary="recover account")
