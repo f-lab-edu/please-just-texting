@@ -32,17 +32,6 @@ async def check_user_duplicate(db: AsyncSession, user: UserCreate):
         raise HTTPException(status_code=400, detail="username or email already exits")
 
 
-async def get_user(db: AsyncSession, email: str) -> User:
-    statement = select(User).where(User.email == email)
-    result = await db.execute(statement)
-    return result.scalar()
-
-
-async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[User]:
-    result = await db.execute(select(User).offset(skip).limit(limit))
-    return result.scalars().all()
-
-
 async def create_user(db: AsyncSession, user: UserCreate) -> User:
     await check_user_duplicate(db, user)
     password_hash = pwd_context.hash(user.password)
