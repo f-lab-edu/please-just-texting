@@ -38,7 +38,7 @@ async def signin(
     try:
         await check_user_exists(db, user)
     except HTTPException as e:
-        return UserResponse(result="fail", error=e)
+        return UserResponse(result="fail", error=e.detail)
     return UserResponse(result="success")
 
 
