@@ -5,23 +5,18 @@ from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_db_user
 from app.models.dao.users import update_user
+from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
-from app.schemas import UpdateUser
 from app.schemas import UserCreate
 from app.schemas import UserResponseModel
 from app.schemas import UserSignin
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-from fastapi import Request
-from fastapi.responses import HTMLResponse
 from fastapi.responses import JSONResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(tags=["users"], default_response_class=JSONResponse)
-
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.post("/signin", summary="Signin")
@@ -75,23 +70,27 @@ async def read_find_account_response_form(
 
     user: User | None = await get_db_user(field=recovery.email, db=db)
     if user:
-        return UserResponseModel(result="success", username=user.name)
+        return UserResponseModel(result="success", name=user.name)
     raise HTTPException(status_code=404, detail="Username not found")
 
 
-@router.post("/password", response_class=HTMLResponse)
+@router.post("/password", summary="reset password")
 async def read_password_response_form(
-    request: Request,
-    username: str,
-    email: str,
-    new_password: str,
+    user: PasswordModel,
     db: AsyncSession = Depends(get_db),
-):
-    user = UpdateUser(name=username, password=new_password, user_email=email)
-    await update_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "reset_password_response_form.html", {"request": request}
+) -> UserResponseModel:
+    """
+    Reset Password by new_password
+
+    - **name (str)**: username
+    - **email (EmailStr)**: password
+    - **new_password (str)**: new password
+    """
+
+    await update_user(
+        name=user.name, email=user.email, new_password=user.new_password, db=db
     )
+    return UserResponseModel(result="sucess")
 
 
 @router.delete("/users/{user_id}", status_code=204)

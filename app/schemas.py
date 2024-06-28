@@ -24,13 +24,19 @@ class RecoveryModel(BaseModel):
     email: str
 
 
+class PasswordModel(BaseModel):
+    name: str
+    email: EmailStr
+    new_password: str
+
+
 class ConversationModel(BaseModel):
     message: str = Field(...)
 
 
 class UserResponseModel(BaseModel):
     result: str
-    username: str | None = None
+    name: str | None = None
     email: str | None = None
     error: str | None = None
 

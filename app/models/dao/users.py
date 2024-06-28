@@ -1,5 +1,4 @@
 from app.models.base import User
-from app.schemas import UpdateUser
 from app.schemas import UserCreate
 from app.schemas import UserSignin
 from fastapi import HTTPException
@@ -52,18 +51,15 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     return db_user
 
 
-async def update_user(db: AsyncSession, user: UpdateUser) -> User:
-    statement = (
-        select(User).where(User.name == user.name).where(User.email == user.user_email)
-    )
+async def update_user(db: AsyncSession, name, email, new_password) -> None:
+    statement = select(User).where(User.name == name).where(User.email == email)
     result = await db.execute(statement)
     db_user = result.scalar()
-    if not db_user:
-        raise HTTPException(status_code=401, detail="Invalid username or email")
-    hashed_password = pwd_context.hash(user.password)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Invalid username or email")
+    hashed_password = pwd_context.hash(new_password)
     db_user.password_hash = hashed_password
     await db.commit()
-    return db_user
 
 
 async def delete_user(db: AsyncSession, user_id: int) -> None:
