@@ -1,8 +1,10 @@
 from app.models.base import User
+from app.schemas import DeleteModel
 from app.schemas import UserCreate
 from app.schemas import UserSignin
 from fastapi import HTTPException
 from passlib.context import CryptContext
+from sqlalchemy import and_
 from sqlalchemy import delete
 from sqlalchemy import or_
 from sqlalchemy import select
@@ -62,6 +64,11 @@ async def update_user(db: AsyncSession, name, email, new_password) -> None:
     await db.commit()
 
 
-async def delete_user(db: AsyncSession, user_id: int) -> None:
-    await db.execute(delete(User).where(User.id == user_id))
+async def delete_user(db: AsyncSession, user: DeleteModel) -> None:
+    statement = delete(User).where(
+        and_(User.name == user.name, User.email == user.email)
+    )
+    user_signin = UserSignin(name=user.name, password=user.password)
+    await check_user_exists(user=user_signin, db=db)
+    await db.execute(statement)
     await db.commit()

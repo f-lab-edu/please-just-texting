@@ -5,6 +5,7 @@ from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_db_user
 from app.models.dao.users import update_user
+from app.schemas import DeleteModel
 from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
 from app.schemas import UserCreate
@@ -93,6 +94,18 @@ async def read_password_response_form(
     return UserResponseModel(result="sucess")
 
 
-@router.delete("/users/{user_id}", status_code=204)
-async def delete_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
-    await delete_user(db=db, user_id=user_id)
+@router.delete("/delete", summary="delete user")
+async def delete_user_endpoint(
+    user: DeleteModel,
+    db: AsyncSession = Depends(get_db),
+) -> UserResponseModel:
+    """
+    Detele user by name, password, email
+
+    - **name (str)**: username
+    - **password (str)**: password
+    - **email (Emailstr)**: email
+    """
+
+    await delete_user(user=user, db=db)
+    return UserResponseModel(result="success")

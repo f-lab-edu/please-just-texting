@@ -30,6 +30,12 @@ class PasswordModel(BaseModel):
     new_password: str
 
 
+class DeleteModel(BaseModel):
+    name: str
+    password: str
+    email: EmailStr
+
+
 class ConversationModel(BaseModel):
     message: str = Field(...)
 
