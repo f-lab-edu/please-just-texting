@@ -5,9 +5,10 @@ from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
 from app.models.dao.users import get_db_user
 from app.models.dao.users import update_user
+from app.schemas import RecoveryModel
 from app.schemas import UpdateUser
 from app.schemas import UserCreate
-from app.schemas import UserResponse
+from app.schemas import UserResponseModel
 from app.schemas import UserSignin
 from fastapi import APIRouter
 from fastapi import Depends
@@ -27,7 +28,7 @@ templates = Jinja2Templates(directory="app/templates")
 async def signin(
     user: UserSignin,
     db: AsyncSession = Depends(get_db),
-) -> UserResponse:
+) -> UserResponseModel:
     """
     Authenticate a user
 
@@ -38,15 +39,15 @@ async def signin(
     try:
         await check_user_exists(db, user)
     except HTTPException as e:
-        return UserResponse(result="fail", error=e.detail)
-    return UserResponse(result="success")
+        return UserResponseModel(result="fail", error=e.detail)
+    return UserResponseModel(result="success")
 
 
 @router.post("/signup", summary="signup")
 async def create_user_endpoint(
     user: UserCreate,
     db: AsyncSession = Depends(get_db),
-) -> UserResponse:
+) -> UserResponseModel:
     """
     Create user
 
@@ -56,22 +57,25 @@ async def create_user_endpoint(
     """
 
     db_user = await create_user(user=user, db=db)
-    return UserResponse(result="success", username=db_user.name, email=db_user.email)
+    return UserResponseModel(
+        result="success", username=db_user.name, email=db_user.email
+    )
 
 
 @router.post("/recovery", summary="recover account")
 async def read_find_account_response_form(
-    email: str, db: AsyncSession = Depends(get_db)
-) -> dict:
+    recovery: RecoveryModel,
+    db: AsyncSession = Depends(get_db),
+) -> UserResponseModel:
     """
     Find Username by email
 
     - **email (str)**: email associated with username
     """
 
-    user: User | None = await get_db_user(field=email, db=db)
+    user: User | None = await get_db_user(field=recovery.email, db=db)
     if user:
-        return {"result": "success", "username": user.name}
+        return UserResponseModel(result="success", username=user.name)
     raise HTTPException(status_code=404, detail="Username not found")
 
 
