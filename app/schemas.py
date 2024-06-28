@@ -20,21 +20,17 @@ class UpdateUser(BaseModel):
     user_email: EmailStr
 
 
-class UserResponse(BaseModel):
-    id: int
-    name: str
-    user_email: EmailStr
-
-    class Config:
-        from_attributes = True
-
-
 class ConversationModel(BaseModel):
     message: str = Field(...)
 
 
-class Response(BaseModel):
+class UserResponse(BaseModel):
     result: str
     username: str | None = None
     email: str | None = None
     error: str | None = None
+
+
+class ConversationResponse(BaseModel):
+    schedule_response: str | None = None
+    parsed_response: dict
