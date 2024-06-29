@@ -3,21 +3,15 @@ from pydantic import EmailStr
 from pydantic import Field
 
 
-class UserSignin(BaseModel):
+class UserSigninModel(BaseModel):
     name: str
     password: str
 
 
-class UserCreate(BaseModel):
+class UserCreateModel(BaseModel):
     name: str
     password: str
     email: EmailStr
-
-
-class UpdateUser(BaseModel):
-    name: str
-    password: str
-    user_email: EmailStr
 
 
 class RecoveryModel(BaseModel):

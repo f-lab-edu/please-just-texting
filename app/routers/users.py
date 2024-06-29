@@ -9,9 +9,9 @@ from app.schemas import DeleteModel
 from app.schemas import GetUserModel
 from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
-from app.schemas import UserCreate
+from app.schemas import UserCreateModel
 from app.schemas import UserResponseModel
-from app.schemas import UserSignin
+from app.schemas import UserSigninModel
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
@@ -23,7 +23,7 @@ router = APIRouter(tags=["users"], default_response_class=JSONResponse)
 
 @router.post("/signin", summary="Signin")
 async def signin(
-    user: UserSignin,
+    user: UserSigninModel,
     db: AsyncSession = Depends(get_db),
 ) -> UserResponseModel:
     """
@@ -42,7 +42,7 @@ async def signin(
 
 @router.post("/signup", summary="signup")
 async def create_user_endpoint(
-    user: UserCreate,
+    user: UserCreateModel,
     db: AsyncSession = Depends(get_db),
 ) -> UserResponseModel:
     """
