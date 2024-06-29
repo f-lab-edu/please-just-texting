@@ -11,7 +11,7 @@ class UserSignin(BaseModel):
 class UserCreate(BaseModel):
     name: str
     password: str
-    user_email: EmailStr
+    email: EmailStr
 
 
 class UpdateUser(BaseModel):
@@ -38,6 +38,11 @@ class DeleteModel(BaseModel):
 
 class ConversationModel(BaseModel):
     message: str = Field(...)
+
+
+class GetUserModel(BaseModel):
+    name: str = "NoName"
+    email: EmailStr = "NotExists@example.com"
 
 
 class UserResponseModel(BaseModel):

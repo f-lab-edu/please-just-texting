@@ -3,9 +3,10 @@ from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
-from app.models.dao.users import get_db_user
+from app.models.dao.users import get_user
 from app.models.dao.users import update_user
 from app.schemas import DeleteModel
+from app.schemas import GetUserModel
 from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
 from app.schemas import UserCreate
@@ -52,15 +53,13 @@ async def create_user_endpoint(
     - **email (str)** : user email(used for recovery)
     """
 
-    db_user = await create_user(user=user, db=db)
-    return UserResponseModel(
-        result="success", username=db_user.name, email=db_user.email
-    )
+    user = await create_user(user=user, db=db)
+    return UserResponseModel(result="success", name=user.name, email=user.email)
 
 
 @router.post("/recovery", summary="recover account")
 async def read_find_account_response_form(
-    recovery: RecoveryModel,
+    user: RecoveryModel,
     db: AsyncSession = Depends(get_db),
 ) -> UserResponseModel:
     """
@@ -69,7 +68,8 @@ async def read_find_account_response_form(
     - **email (str)**: email associated with username
     """
 
-    user: User | None = await get_db_user(field=recovery.email, db=db)
+    dto = GetUserModel(email=user.email)
+    user: User | None = await get_user(user=dto, db=db)
     if user:
         return UserResponseModel(result="success", name=user.name)
     raise HTTPException(status_code=404, detail="Username not found")
@@ -88,9 +88,7 @@ async def read_password_response_form(
     - **new_password (str)**: new password
     """
 
-    await update_user(
-        name=user.name, email=user.email, new_password=user.new_password, db=db
-    )
+    await update_user(user=user, db=db)
     return UserResponseModel(result="sucess")
 
 
