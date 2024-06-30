@@ -9,6 +9,7 @@ from app.schemas import DeleteModel
 from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
 from app.schemas import UserCreateModel
+from app.schemas import UserModel
 from app.schemas import UserResponseModel
 from app.schemas import UserSigninModel
 from fastapi import APIRouter
@@ -52,7 +53,7 @@ async def create_user_endpoint(
     - **email (str)** : user email(used for recovery)
     """
 
-    user = await create_user(user=user, db=db)
+    user: UserModel = await create_user(user=user, db=db)
     return UserResponseModel(result="success", name=user.name, email=user.email)
 
 
@@ -67,7 +68,7 @@ async def read_find_account_response_form(
     - **email (str)**: email associated with username
     """
 
-    user: User | None = await get_user_by_email(email=user.email, db=db)
+    user: User = await get_user_by_email(email=user.email, db=db)
     if user:
         return UserResponseModel(result="success", name=user.name)
     raise HTTPException(status_code=404, detail="Username not found")

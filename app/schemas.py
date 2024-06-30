@@ -34,6 +34,14 @@ class ConversationModel(BaseModel):
     message: str = Field(...)
 
 
+class UserModel(BaseModel):
+    name: str
+    email: EmailStr
+
+    class Config:
+        orm_mode: True
+
+
 class UserResponseModel(BaseModel):
     result: str
     name: str | None = None

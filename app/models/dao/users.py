@@ -2,6 +2,7 @@ from app.models.base import User
 from app.schemas import DeleteModel
 from app.schemas import PasswordModel
 from app.schemas import UserCreateModel
+from app.schemas import UserModel
 from app.schemas import UserSigninModel
 from fastapi import HTTPException
 from passlib.context import CryptContext
@@ -16,13 +17,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 async def get_user_by_name(db: AsyncSession, name: str) -> User | None:
     statement = select(User).where(name == User.name)
     result = await db.execute(statement)
-    return result.scalar()
+    return result.scalar_one_or_none()
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     statement = select(User).where(email == User.email)
     result = await db.execute(statement)
-    return result.scalar()
+    return result.scalar_one_or_none()
 
 
 async def check_user_exists(db: AsyncSession, user: UserSigninModel):
@@ -39,14 +40,15 @@ async def check_user_duplicate(db: AsyncSession, name: str, email: str):
         raise HTTPException(status_code=400, detail="username or email already exits")
 
 
-async def create_user(db: AsyncSession, user: UserCreateModel) -> User:
+async def create_user(db: AsyncSession, user: UserCreateModel) -> UserModel:
     await check_user_duplicate(name=user.name, email=user.email, db=db)
     password_hash = pwd_context.hash(user.password)
     db_user = User(name=user.name, password_hash=password_hash, email=user.email)
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
-    return db_user
+    user_model = UserModel.from_orm(db_user)
+    return user_model
 
 
 async def update_user(db: AsyncSession, user: PasswordModel) -> None:
