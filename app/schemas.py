@@ -1,28 +1,54 @@
 from pydantic import BaseModel
 from pydantic import EmailStr
+from pydantic import Field
 
 
-class UserLogin(BaseModel):
+class UserSigninModel(BaseModel):
     name: str
     password: str
 
 
-class UserCreate(BaseModel):
+class UserCreateModel(BaseModel):
     name: str
     password: str
-    user_email: EmailStr
+    email: EmailStr
 
 
-class UpdateUser(BaseModel):
+class RecoveryModel(BaseModel):
+    email: str
+
+
+class PasswordModel(BaseModel):
+    name: str
+    email: EmailStr
+    new_password: str
+
+
+class DeleteModel(BaseModel):
     name: str
     password: str
-    user_email: EmailStr
+    email: EmailStr
 
 
-class UserResponse(BaseModel):
-    id: int
+class ConversationModel(BaseModel):
+    message: str = Field(...)
+
+
+class UserModel(BaseModel):
     name: str
-    user_email: EmailStr
+    email: EmailStr
 
     class Config:
         from_attributes = True
+
+
+class UserResponseModel(BaseModel):
+    result: str
+    name: str | None = None
+    email: str | None = None
+    error: str | None = None
+
+
+class ConversationResponseModel(BaseModel):
+    schedule_response: str | None = None
+    parsed_response: dict

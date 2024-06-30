@@ -1,97 +1,108 @@
 from app.dependencies import get_db
+from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
-from app.models.dao.users import get_user
+from app.models.dao.users import get_user_by_email
 from app.models.dao.users import update_user
-from app.schemas import UpdateUser
-from app.schemas import UserCreate
-from app.schemas import UserLogin
+from app.schemas import DeleteModel
+from app.schemas import PasswordModel
+from app.schemas import RecoveryModel
+from app.schemas import UserCreateModel
+from app.schemas import UserModel
+from app.schemas import UserResponseModel
+from app.schemas import UserSigninModel
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import Form
-from fastapi import Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter()
-
-templates = Jinja2Templates(directory="app/templates")
+router = APIRouter(tags=["users"], default_response_class=JSONResponse)
 
 
-@router.get("/login", response_class=HTMLResponse)
-async def read_login_form(request: Request):
-    return templates.TemplateResponse("login_form.html", {"request": request})
-
-
-@router.post("/login/submit", response_class=HTMLResponse)
-async def login(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
+@router.post("/signin", summary="Signin")
+async def signin(
+    user: UserSigninModel,
     db: AsyncSession = Depends(get_db),
-):
-    user = UserLogin(name=username, password=password)
-    await check_user_exists(db, user)
-    return templates.TemplateResponse("dialogue_form.html", {"request": request})
+) -> UserResponseModel:
+    """
+    Authenticate a user
+
+    - **username (str)**: username to signin
+    - **password (str)**: password to signin
+    """
+
+    try:
+        await check_user_exists(db, user)
+    except HTTPException as e:
+        return UserResponseModel(result="fail", error=e.detail)
+    return UserResponseModel(result="success")
 
 
-@router.get("/create_account", response_class=HTMLResponse)
-async def read_create_account_form(request: Request):
-    return templates.TemplateResponse("create_account_form.html", {"request": request})
-
-
-@router.post("/create_account/submit", response_class=HTMLResponse)
+@router.post("/signup", summary="signup")
 async def create_user_endpoint(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    email: str = Form(...),
+    user: UserCreateModel,
     db: AsyncSession = Depends(get_db),
-):
-    user = UserCreate(name=username, password=password, user_email=email)
-    db_user = await create_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "create_account_response_form.html", {"request": request, "data": db_user}
-    )
+) -> UserResponseModel:
+    """
+    Create user
+
+    - **username (str)**: username
+    - **password (str)**: password
+    - **email (str)** : user email(used for recovery)
+    """
+
+    user: UserModel = await create_user(user=user, db=db)
+    return UserResponseModel(result="success", name=user.name, email=user.email)
 
 
-@router.get("/find_account", response_class=HTMLResponse)
-async def read_find_account_form(request: Request):
-    return templates.TemplateResponse("find_account_form.html", {"request": request})
-
-
-@router.post("/find_account/submit", response_class=HTMLResponse)
+@router.post("/recovery", summary="recover account")
 async def read_find_account_response_form(
-    request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
-):
-    db_user = await get_user(email=email, db=db)
-    return templates.TemplateResponse(
-        "find_account_response_form.html", {"request": request, "data": db_user}
-    )
-
-
-@router.get("/reset_password", response_class=HTMLResponse)
-async def read_password_form(request: Request):
-    return templates.TemplateResponse("reset_password_form.html", {"request": request})
-
-
-@router.post("/reset_password/submit", response_class=HTMLResponse)
-async def read_password_response_form(
-    request: Request,
-    username: str = Form(...),
-    email: str = Form(...),
-    new_password: str = Form(...),
+    user: RecoveryModel,
     db: AsyncSession = Depends(get_db),
-):
-    user = UpdateUser(name=username, password=new_password, user_email=email)
+) -> UserResponseModel:
+    """
+    Find Username by email
+
+    - **email (str)**: email associated with username
+    """
+
+    user: User = await get_user_by_email(email=user.email, db=db)
+    if user:
+        return UserResponseModel(result="success", name=user.name)
+    raise HTTPException(status_code=404, detail="Username not found")
+
+
+@router.post("/password", summary="reset password")
+async def read_password_response_form(
+    user: PasswordModel,
+    db: AsyncSession = Depends(get_db),
+) -> UserResponseModel:
+    """
+    Reset Password by new_password
+
+    - **name (str)**: username
+    - **email (EmailStr)**: password
+    - **new_password (str)**: new password
+    """
+
     await update_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "reset_password_response_form.html", {"request": request}
-    )
+    return UserResponseModel(result="sucess")
 
 
-@router.delete("/users/{user_id}", status_code=204)
-async def delete_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
-    await delete_user(db=db, user_id=user_id)
+@router.delete("/delete", summary="delete user")
+async def delete_user_endpoint(
+    user: DeleteModel,
+    db: AsyncSession = Depends(get_db),
+) -> UserResponseModel:
+    """
+    Detele user by name, password, email
+
+    - **name (str)**: username
+    - **password (str)**: password
+    - **email (Emailstr)**: email
+    """
+
+    await delete_user(user=user, db=db)
+    return UserResponseModel(result="success")
