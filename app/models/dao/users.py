@@ -51,9 +51,7 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
 
 
 async def update_user(db: AsyncSession, user: UpdateUser) -> User:
-    statement = (
-        select(User).where(User.name == user.name).where(User.email == user.user_email)
-    )
+    statement = select(User).where(User.name == user.name).where(User.email == user.user_email)
     result = await db.execute(statement)
     db_user = result.scalar()
     if not db_user:

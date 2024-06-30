@@ -52,9 +52,7 @@ async def create_user_endpoint(
 ):
     user = UserCreate(name=username, password=password, user_email=email)
     db_user = await create_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "create_account_response_form.html", {"request": request, "data": db_user}
-    )
+    return templates.TemplateResponse("create_account_response_form.html", {"request": request, "data": db_user})
 
 
 @router.get("/find_account", response_class=HTMLResponse)
@@ -63,13 +61,9 @@ async def read_find_account_form(request: Request):
 
 
 @router.post("/find_account/submit", response_class=HTMLResponse)
-async def read_find_account_response_form(
-    request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)
-):
+async def read_find_account_response_form(request: Request, email: str = Form(...), db: AsyncSession = Depends(get_db)):
     db_user = await get_user(email=email, db=db)
-    return templates.TemplateResponse(
-        "find_account_response_form.html", {"request": request, "data": db_user}
-    )
+    return templates.TemplateResponse("find_account_response_form.html", {"request": request, "data": db_user})
 
 
 @router.get("/reset_password", response_class=HTMLResponse)
@@ -87,9 +81,7 @@ async def read_password_response_form(
 ):
     user = UpdateUser(name=username, password=new_password, user_email=email)
     await update_user(user=user, db=db)
-    return templates.TemplateResponse(
-        "reset_password_response_form.html", {"request": request}
-    )
+    return templates.TemplateResponse("reset_password_response_form.html", {"request": request})
 
 
 @router.delete("/users/{user_id}", status_code=204)

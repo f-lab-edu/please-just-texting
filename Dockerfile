@@ -8,6 +8,4 @@ WORKDIR /src
 COPY . /src
 RUN pip install -r requirements.txt
 
-# A command for running FastAPI app.
 CMD ["python3", "app/main.py"]
-

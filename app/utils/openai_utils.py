@@ -9,9 +9,7 @@ client = OpenAI(
     api_key=settings.openai_api_key,
 )
 
-env = Environment(
-    loader=FileSystemLoader("./app/prompts"), autoescape=select_autoescape(["jinja"])
-)
+env = Environment(loader=FileSystemLoader("./app/prompts"), autoescape=select_autoescape(["jinja"]))
 
 
 def getResponseFromOpenai(message: str) -> str:
