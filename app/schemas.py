@@ -34,11 +34,6 @@ class ConversationModel(BaseModel):
     message: str = Field(...)
 
 
-class GetUserModel(BaseModel):
-    name: str = "NoName"
-    email: EmailStr = "NotExists@example.com"
-
-
 class UserResponseModel(BaseModel):
     result: str
     name: str | None = None

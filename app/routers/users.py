@@ -3,10 +3,9 @@ from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
 from app.models.dao.users import delete_user
-from app.models.dao.users import get_user
+from app.models.dao.users import get_user_by_email
 from app.models.dao.users import update_user
 from app.schemas import DeleteModel
-from app.schemas import GetUserModel
 from app.schemas import PasswordModel
 from app.schemas import RecoveryModel
 from app.schemas import UserCreateModel
@@ -68,8 +67,7 @@ async def read_find_account_response_form(
     - **email (str)**: email associated with username
     """
 
-    dto = GetUserModel(email=user.email)
-    user: User | None = await get_user(user=dto, db=db)
+    user: User | None = await get_user_by_email(email=user.email, db=db)
     if user:
         return UserResponseModel(result="success", name=user.name)
     raise HTTPException(status_code=404, detail="Username not found")

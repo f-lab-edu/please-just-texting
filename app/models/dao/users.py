@@ -1,6 +1,5 @@
 from app.models.base import User
 from app.schemas import DeleteModel
-from app.schemas import GetUserModel
 from app.schemas import PasswordModel
 from app.schemas import UserCreateModel
 from app.schemas import UserSigninModel
@@ -8,32 +7,36 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy import and_
 from sqlalchemy import delete
-from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-async def get_user(db: AsyncSession, user: GetUserModel) -> User | None:
-    statement = select(User).where(
-        or_(User.name == user.name, User.email == user.email)
-    )
+async def get_user_by_name(db: AsyncSession, name: str) -> User | None:
+    statement = select(User).where(name == User.name)
+    result = await db.execute(statement)
+    return result.scalar()
+
+
+async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
+    statement = select(User).where(email == User.email)
     result = await db.execute(statement)
     return result.scalar()
 
 
 async def check_user_exists(db: AsyncSession, user: UserSigninModel):
-    dto = GetUserModel(name=user.name)
-    db_user = await get_user(db=db, user=dto)
+    db_user: str | None = await get_user_by_name(db=db, name=user.name)
     if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid username or password")
 
 
 async def check_user_duplicate(db: AsyncSession, user: UserCreateModel):
-    gto = GetUserModel(name=user.name, email=user.email)
-    user = await get_user(db=db, user=gto)
-    if user:
+    existing_user_by_name: str | None = await get_user_by_name(db=db, name=user.name)
+    existing_user_by_email: str | None = await get_user_by_email(
+        db=db, email=user.email
+    )
+    if existing_user_by_name or existing_user_by_email:
         raise HTTPException(status_code=400, detail="username or email already exits")
 
 
