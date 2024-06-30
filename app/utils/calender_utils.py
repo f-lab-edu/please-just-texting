@@ -1,7 +1,4 @@
-import datetime
 import logging
-import os
-import pickle
 
 from app.settings import PROJECT_ROOT
 from app.settings import settings
@@ -17,9 +14,7 @@ USER_TO_IMPERSONATE = settings.impersonation_account
 
 
 def get_calendar_service() -> Request:
-    creds = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES, subject=USER_TO_IMPERSONATE
-    )
+    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES, subject=USER_TO_IMPERSONATE)
     creds = creds.with_subject(USER_TO_IMPERSONATE)
     service = build("calendar", "v3", credentials=creds)
     return service
@@ -43,16 +38,22 @@ def add_event_to_calendar(parsed_response: dict[str, str]) -> None:
             "dateTime": f"{date}T10:00:00",
             "timeZone": "Asia/Seoul",
         },
-        "attendees": [{
-            "email": "sniper45han@gmail.com",
-            "self": True,
-            "responseStatus": "needsAction",
-        }],
+        "attendees": [
+            {
+                "email": "sniper45han@gmail.com",
+                "self": True,
+                "responseStatus": "needsAction",
+            }
+        ],
     }
 
-    event = service.events().insert(
-        calendarId="primary",
-        body=event,
-        sendUpdates="all",
-    ).execute()
+    event = (
+        service.events()
+        .insert(
+            calendarId="primary",
+            body=event,
+            sendUpdates="all",
+        )
+        .execute()
+    )
     logger.debug(f"Event created: {event.get('htmlLink')}")
