@@ -39,7 +39,7 @@ class UserModel(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode: True
+        from_attributes = True
 
 
 class UserResponseModel(BaseModel):
