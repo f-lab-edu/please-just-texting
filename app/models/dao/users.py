@@ -27,8 +27,9 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
 
 async def check_user_exists(db: AsyncSession, user: UserSigninModel):
     db_user: str | None = await get_user_by_name(db=db, name=user.name)
-    if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+    if db_user and pwd_context.verify(user.password, db_user.password_hash):
+        return
+    raise HTTPException(status_code=401, detail="Invalid username or password")
 
 
 async def check_user_duplicate(db: AsyncSession, user: UserCreateModel):
