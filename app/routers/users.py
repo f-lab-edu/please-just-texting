@@ -1,4 +1,5 @@
 from app.dependencies import get_db
+from app.dependencies import oauth2_scheme
 from app.models.base import User
 from app.models.dao.users import check_user_exists
 from app.models.dao.users import create_user
@@ -23,8 +24,7 @@ router = APIRouter(tags=["users"], default_response_class=JSONResponse)
 
 @router.post("/signin", summary="Signin")
 async def signin(
-    user: UserSigninModel,
-    db: AsyncSession = Depends(get_db),
+    user: UserSigninModel, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)
 ) -> UserResponseModel:
     """
     Authenticate a user

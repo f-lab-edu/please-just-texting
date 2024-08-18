@@ -2,6 +2,7 @@ from app.models.base import User
 from app.schemas import DeleteModel
 from app.schemas import PasswordModel
 from app.schemas import UserCreateModel
+from app.schemas import UserInDB
 from app.schemas import UserModel
 from app.schemas import UserSigninModel
 from fastapi import HTTPException
@@ -14,16 +15,39 @@ from sqlalchemy.ext.asyncio import AsyncSession
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+# TODO: DB에서 가져온다는 기능에만 충실하고, 에러처리는 사용한 측에서 따로 처리하도록 변경
+
+
+# TODO: get_user와 비교해서 필요없다면 지워버려라
 async def get_user_by_name(db: AsyncSession, name: str) -> User | None:
     statement = select(User).where(name == User.name)
     result = await db.execute(statement)
     return result.scalar_one_or_none()
 
 
+# TODO: get_user와 비교해서 필요없다면 지워버려라
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     statement = select(User).where(email == User.email)
     result = await db.execute(statement)
     return result.scalar_one_or_none()
+
+
+async def get_user(db: AsyncSession, username: str) -> UserInDB | bool:
+    statement = select(User).where(username == User.name)
+    result = await db.execute(statement)
+    if not result:
+        return False
+    user = result.scalar_one_or_none()
+    return UserInDB(username=user.name, hashed_password=user.password_hash, email=user.email)
+
+
+async def authenticate_user(db: AsyncSession, username: str, password: str) -> UserInDB | bool:
+    user = get_user(db=db, username=username)
+    if not user:
+        return False
+    if not pwd_context.verify(password, user.hashed_password):
+        return False
+    return user
 
 
 async def check_user_exists(db: AsyncSession, user: UserSigninModel) -> None:

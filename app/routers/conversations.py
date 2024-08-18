@@ -1,17 +1,21 @@
 import json
 
+from app.dependencies import oauth2_scheme
 from app.schemas import ConversationModel
 from app.schemas import ConversationResponseModel
 from app.utils import calender_utils
 from app.utils import openai_utils
 from fastapi import APIRouter
+from fastapi import Depends
 from fastapi.responses import JSONResponse
 
 router = APIRouter(default_response_class=JSONResponse, tags=["conversation"])
 
 
 @router.post("/conversation")
-async def submit_dialogue(conversation: ConversationModel) -> ConversationResponseModel:
+async def submit_dialogue(
+    conversation: ConversationModel, token: str = Depends(oauth2_scheme)
+) -> ConversationResponseModel:
     """
     Create event to calendar with all information:
 
