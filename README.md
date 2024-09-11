@@ -10,7 +10,10 @@
 Run the following:
 
 ```bash
-make
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y pkg-config default-libmysqlclient-dev build-essential pkg-config
+poetry install
 ```
 
 ## Architecture
